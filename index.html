@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h2>Monitor MACD SOL/USDT (1h)</h2>
+    <p id="status">Iniciando monitoramento...</p>
+
+    <script>
+        async function checkMACD() {
+            // 1. Busca dados da Binance (1h, sem autenticação)
+            const response = await fetch('https://api.binance.com');
+            const data = await response.json();
+            const prices = data.map(d => parseFloat(d[4])); // Preços de fechamento
+
+            // 2. Lógica simplificada de cálculo e cruzamento (exemplo conceitual)
+            // Dica: Use a biblioteca 'technicalindicators' via CDN para cálculos precisos
+            console.log("Preço atual SOL:", prices[prices.length - 1]);
+
+            // 3. Enviar Alerta via ntfy.sh (Substitua 'meu_topico_secreto' por um nome único)
+            // No celular, instale o app ntfy e adicione este tópico.
+            if (/* condicao de cruzamento */ true) {
+                fetch('https://ntfy.sh', {
+                    method: 'POST',
+                    body: 'SOL/USDT Cruzamento MACD 1h detectado!'
+                });
+            }
+        }
+        
+        // Executa a cada 5 minutos
+        setInterval(checkMACD, 300000);
+        checkMACD();
+    </script>
+</body>
+</html>
