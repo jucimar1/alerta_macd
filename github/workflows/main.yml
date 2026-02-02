@@ -1,22 +1,31 @@
-name: Alerta MACD SOL
+name: Alerta Crypto SQL
 on:
   schedule:
-    # Roda no minuto 5 de cada hora (ex: 13:05, 14:05) 
-    # para garantir que o candle da hora anterior fechou
-    - cron: '5 * * * *'
-  workflow_dispatch: # Permite que você teste clicando em um botão
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
 
 jobs:
-  check-crypto:
+  build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
 
-      - name: Executar Alerta
+      - name: Install Dependencies
+        run: npm install sqlite3
+
+      - name: Run Analysis
         run: node monitor.js
+
+      - name: Save Database Changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add crypto_history.db
+          git commit -m "Update DB [skip ci]" || echo "No changes"
+          git push
