@@ -1,0 +1,22 @@
+name: Alerta MACD SOL
+on:
+  schedule:
+    # Roda no minuto 5 de cada hora (ex: 13:05, 14:05) 
+    # para garantir que o candle da hora anterior fechou
+    - cron: '5 * * * *'
+  workflow_dispatch: # Permite que você teste clicando em um botão
+
+jobs:
+  check-crypto:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Executar Alerta
+        run: node monitor.js
