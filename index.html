@@ -3,52 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Monitor SOL 2026</title>
+    <title>SOL Pro Dashboard</title>
+    <!-- Lightweight Charts - Biblioteca de Gráficos Profissionais -->
     <script src="https://unpkg.com"></script>
     <style>
-        body { background: #0b0e11; color: #eaecef; margin: 0; font-family: sans-serif; overflow: hidden; }
-        #chart { height: 85vh; width: 100vw; }
-        .stats { height: 15vh; padding: 10px; display: flex; justify-content: space-around; align-items: center; background: #181a20; border-top: 2px solid #2b2f36; }
-        .val { color: #f0b90b; font-weight: bold; font-size: 1.2em; }
+        body { background: #0b0e11; color: #eaecef; margin: 0; font-family: sans-serif; height: 100vh; display: flex; flex-direction: column; }
+        #chart { flex-grow: 1; min-height: 400px; width: 100%; }
+        .stats { height: 120px; padding: 15px; background: #181a20; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; border-top: 2px solid #2b3139; }
+        .box { background: #2b3139; padding: 10px; border-radius: 4px; text-align: center; }
+        .val { color: #f0b90b; font-weight: bold; display: block; font-size: 1.1em; }
     </style>
 </head>
 <body>
     <div id="chart"></div>
     <div class="stats">
-        <div>Preço: <br><span id="price" class="val">---</span></div>
-        <div>Suporte (1h): <br><span id="sup" style="color: #0ecb81;">---</span></div>
-        <div>Resistência (1h): <br><span id="res" style="color: #f6465d;">---</span></div>
+        <div class="box">Preço SOL<span id="price" class="val">---</span></div>
+        <div class="box">Suporte 24h<span id="sup" class="val" style="color: #0ecb81;">---</span></div>
+        <div class="box">Resistência 24h<span id="res" class="val" style="color: #f6465d;">---</span></div>
     </div>
 
     <script>
+        // 1. Inicializar Gráfico
         const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-            layout: { backgroundColor: '#0b0e11', textColor: '#848e9c' },
-            grid: { vertLines: { color: '#2b2f36' }, horzLines: { color: '#2b2f36' } },
-            timeScale: { timeVisible: true }
+            layout: { background: { color: '#0b0e11' }, textColor: '#848e9c' },
+            grid: { vertLines: { color: '#1f2226' }, horzLines: { color: '#1f2226' } },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+            timeScale: { timeVisible: true, borderVisible: false }
         });
-        const candleSeries = chart.addCandlestickSeries();
 
-        async function load() {
-            const r = await fetch('https://api.binance.com');
-            const data = await r.json();
-            const candles = data.map(d => ({
-                time: d[0] / 1000,
-                open: parseFloat(d[1]), high: parseFloat(d[2]),
-                low: parseFloat(d[3]), close: parseFloat(d[4])
-            }));
-            candleSeries.setData(candles);
+        const candleSeries = chart.addCandlestickSeries({
+            upColor: '#0ecb81', downColor: '#f6465d', borderVisible: false,
+            wickUpColor: '#0ecb81', wickDownColor: '#f6465d'
+        });
 
-            const last = candles[candles.length - 1];
-            const highs = candles.slice(-24).map(c => c.high);
-            const lows = candles.slice(-24).map(c => c.low);
+        // Variáveis para as linhas horizontais
+        let supLine, resLine;
 
-            document.getElementById('price').innerText = `$${last.close}`;
-            document.getElementById('sup').innerText = `$${Math.min(...lows).toFixed(2)}`;
-            document.getElementById('res').innerText = `$${Math.max(...highs).toFixed(2)}`;
+        async function updateDashboard() {
+            try {
+                const response = await fetch('https://api.binance.com');
+                const rawData = await response.json();
+
+                // 2. Corrigir Formato de Dados (ESSENCIAL)
+                const formattedData = rawData.map(d => ({
+                    time: d[0] / 1000, // Converte timestamp para segundos
+                    open: parseFloat(d[1]),
+                    high: parseFloat(d[2]),
+                    low: parseFloat(d[3]),
+                    close: parseFloat(d[4])
+                }));
+
+                candleSeries.setData(formattedData);
+
+                // 3. Cálculos de Suporte e Resistência (24h)
+                const last24 = formattedData.slice(-24);
+                const currentSup = Math.min(...last24.map(c => c.low));
+                const currentRes = Math.max(...last24.map(c => c.high));
+                const lastPrice = formattedData[formattedData.length - 1].close;
+
+                // Atualizar texto na tela
+                document.getElementById('price').innerText = `$${lastPrice.toFixed(2)}`;
+                document.getElementById('sup').innerText = `$${currentSup.toFixed(2)}`;
+                document.getElementById('res').innerText = `$${currentRes.toFixed(2)}`;
+
+                // 4. Desenhar Linhas no Gráfico
+                if (supLine) candleSeries.removePriceLine(supLine);
+                if (resLine) candleSeries.removePriceLine(resLine);
+
+                supLine = candleSeries.createPriceLine({
+                    price: currentSup, color: '#0ecb81', lineWidth: 2, lineStyle: 2, axisLabelVisible: true, title: 'SUPORTE'
+                });
+                resLine = candleSeries.createPriceLine({
+                    price: currentRes, color: '#f6465d', lineWidth: 2, lineStyle: 2, axisLabelVisible: true, title: 'RESISTÊNCIA'
+                });
+
+            } catch (error) {
+                console.error("Erro ao carregar dados:", error);
+            }
         }
 
-        load();
-        setInterval(load, 30000);
+        updateDashboard();
+        setInterval(updateDashboard, 60000); // Atualiza a cada minuto
     </script>
 </body>
 </html>
