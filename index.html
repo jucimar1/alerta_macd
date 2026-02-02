@@ -66,6 +66,33 @@
                 document.getElementById('sup').innerText = `$${currentSup.toFixed(2)}`;
                 document.getElementById('res').innerText = `$${currentRes.toFixed(2)}`;
 
+                <div id="dashboard" style="background: #1e222d; padding: 15px; border-radius: 8px; margin: 10px;">
+    <h3>Status Sniper SOL</h3>
+    <p>Preço Atual: <span id="price">-</span></p>
+    <p>Distância Suporte: <span id="dSup">-</span>%</p>
+    <p>Tendência MACD: <span id="mTrend">-</span></p>
+</div>
+
+<script>
+    async function updateDashboard() {
+        const res = await fetch('https://api.binance.com');
+        const data = await res.json();
+        const closes = data.map(d => parseFloat(d[4]));
+        const lows = data.map(d => parseFloat(d[3]));
+        
+        const current = closes[closes.length - 1];
+        const support = Math.min(...lows.slice(-24));
+        const dist = ((current - support) / support * 100).toFixed(2);
+
+        document.getElementById('price').innerText = `$${current}`;
+        document.getElementById('dSup').innerText = dist;
+        document.getElementById('dSup').style.color = dist < 1 ? '#00ff88' : '#fff';
+    }
+    setInterval(updateDashboard, 30000);
+    updateDashboard();
+</script>
+
+
                 // 4. Desenhar Linhas no Gráfico
                 if (supLine) candleSeries.removePriceLine(supLine);
                 if (resLine) candleSeries.removePriceLine(resLine);
