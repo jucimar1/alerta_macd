@@ -3,73 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SOL/USDT Pro Monitor</title>
-    <!-- Bibliotecas via CDN -->
+    <title>Monitor SOL 2026</title>
     <script src="https://unpkg.com"></script>
-    <script src="https://cdn.jsdelivr.net"></script>
     <style>
-        body { background: #131722; color: white; margin: 0; font-family: sans-serif; }
-        #chart { height: 70vh; width: 100%; }
-        .info { padding: 15px; font-size: 14px; border-top: 1px solid #2f333d; }
-        .status-up { color: #00ff88; } .status-down { color: #ff4444; }
+        body { background: #0b0e11; color: #eaecef; margin: 0; font-family: sans-serif; overflow: hidden; }
+        #chart { height: 85vh; width: 100vw; }
+        .stats { height: 15vh; padding: 10px; display: flex; justify-content: space-around; align-items: center; background: #181a20; border-top: 2px solid #2b2f36; }
+        .val { color: #f0b90b; font-weight: bold; font-size: 1.2em; }
     </style>
 </head>
 <body>
     <div id="chart"></div>
-    <div class="info">
-        <b>SOL/USDT (1h)</b> | MACD: <span id="macdStatus">Calculando...</span><br>
-        Suporte: <span id="sup" class="status-up">-</span> | Resistência: <span id="res" class="status-down">-</span>
+    <div class="stats">
+        <div>Preço: <br><span id="price" class="val">---</span></div>
+        <div>Suporte (1h): <br><span id="sup" style="color: #0ecb81;">---</span></div>
+        <div>Resistência (1h): <br><span id="res" style="color: #f6465d;">---</span></div>
     </div>
 
     <script>
         const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-            layout: { backgroundColor: '#131722', textColor: '#d1d4dc' },
-            grid: { vertLines: { color: '#2f333d' }, horzLines: { color: '#2f333d' } },
-            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
-            timeScale: { timeVisible: true, secondsVisible: false }
+            layout: { backgroundColor: '#0b0e11', textColor: '#848e9c' },
+            grid: { vertLines: { color: '#2b2f36' }, horzLines: { color: '#2b2f36' } },
+            timeScale: { timeVisible: true }
         });
-
         const candleSeries = chart.addCandlestickSeries();
 
-        async function updateData() {
-            const res = await fetch('https://api.binance.com');
-            const data = await res.json();
-            
-            const formattedData = data.map(d => ({
+        async function load() {
+            const r = await fetch('https://api.binance.com');
+            const data = await r.json();
+            const candles = data.map(d => ({
                 time: d[0] / 1000,
                 open: parseFloat(d[1]), high: parseFloat(d[2]),
                 low: parseFloat(d[3]), close: parseFloat(d[4])
             }));
+            candleSeries.setData(candles);
 
-            candleSeries.setData(formattedData);
+            const last = candles[candles.length - 1];
+            const highs = candles.slice(-24).map(c => c.high);
+            const lows = candles.slice(-24).map(c => c.low);
 
-            const closes = formattedData.map(d => d.close);
-            
-            // 1. Cálculo MACD Profissional
-            const macdInput = { values: closes, fastPeriod: 12, slowPeriod: 26, signalPeriod: 9, SimpleMAOscillator: false, SimpleMASignal: false };
-            const macdResults = technicalindicators.MACD.calculate(macdInput);
-            const lastMACD = macdResults[macdResults.length - 1];
-
-            document.getElementById('macdStatus').innerHTML = 
-                `Linha: ${lastMACD.MACD.toFixed(2)} | Sinal: ${lastMACD.signal.toFixed(2)}`;
-
-            // 2. Cálculo de Suporte e Resistência (Topos e Fundos)
-            const highs = formattedData.map(d => d.high);
-            const lows = formattedData.map(d => d.low);
-            const resistance = Math.max(...highs.slice(-24)); // Máxima das últimas 24h
-            const support = Math.min(...lows.slice(-24));    // Mínima das últimas 24h
-
-            document.getElementById('sup').innerText = support.toFixed(2);
-            document.getElementById('res').innerText = resistance.toFixed(2);
-
-            // Alerta (opcional para o navegador)
-            if (lastMACD.MACD > lastMACD.signal && macdResults[macdResults.length - 2].MACD <= macdResults[macdResults.length - 2].signal) {
-                console.log("ALERTA: Cruzamento de Alta!");
-            }
+            document.getElementById('price').innerText = `$${last.close}`;
+            document.getElementById('sup').innerText = `$${Math.min(...lows).toFixed(2)}`;
+            document.getElementById('res').innerText = `$${Math.max(...highs).toFixed(2)}`;
         }
 
-        updateData();
-        setInterval(updateData, 60000); // Atualiza a cada minuto
+        load();
+        setInterval(load, 30000);
     </script>
 </body>
 </html>
