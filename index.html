@@ -1,33 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOL/USDT Pro Monitor</title>
+    <!-- Bibliotecas via CDN -->
+    <script src="https://unpkg.com"></script>
+    <script src="https://cdn.jsdelivr.net"></script>
+    <style>
+        body { background: #131722; color: white; margin: 0; font-family: sans-serif; }
+        #chart { height: 70vh; width: 100%; }
+        .info { padding: 15px; font-size: 14px; border-top: 1px solid #2f333d; }
+        .status-up { color: #00ff88; } .status-down { color: #ff4444; }
+    </style>
+</head>
 <body>
-    <h2>Monitor MACD SOL/USDT (1h)</h2>
-    <p id="status">Iniciando monitoramento...</p>
+    <div id="chart"></div>
+    <div class="info">
+        <b>SOL/USDT (1h)</b> | MACD: <span id="macdStatus">Calculando...</span><br>
+        Suporte: <span id="sup" class="status-up">-</span> | Resistência: <span id="res" class="status-down">-</span>
+    </div>
 
     <script>
-        async function checkMACD() {
-            // 1. Busca dados da Binance (1h, sem autenticação)
-            const response = await fetch('https://api.binance.com');
-            const data = await response.json();
-            const prices = data.map(d => parseFloat(d[4])); // Preços de fechamento
+        const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+            layout: { backgroundColor: '#131722', textColor: '#d1d4dc' },
+            grid: { vertLines: { color: '#2f333d' }, horzLines: { color: '#2f333d' } },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal },
+            timeScale: { timeVisible: true, secondsVisible: false }
+        });
 
-            // 2. Lógica simplificada de cálculo e cruzamento (exemplo conceitual)
-            // Dica: Use a biblioteca 'technicalindicators' via CDN para cálculos precisos
-            console.log("Preço atual SOL:", prices[prices.length - 1]);
+        const candleSeries = chart.addCandlestickSeries();
 
-            // 3. Enviar Alerta via ntfy.sh (Substitua 'meu_topico_secreto' por um nome único)
-            // No celular, instale o app ntfy e adicione este tópico.
-            if (/* condicao de cruzamento */ true) {
-                fetch('https://ntfy.sh', {
-                    method: 'POST',
-                    body: 'SOL/USDT Cruzamento MACD 1h detectado!'
-                });
+        async function updateData() {
+            const res = await fetch('https://api.binance.com');
+            const data = await res.json();
+            
+            const formattedData = data.map(d => ({
+                time: d[0] / 1000,
+                open: parseFloat(d[1]), high: parseFloat(d[2]),
+                low: parseFloat(d[3]), close: parseFloat(d[4])
+            }));
+
+            candleSeries.setData(formattedData);
+
+            const closes = formattedData.map(d => d.close);
+            
+            // 1. Cálculo MACD Profissional
+            const macdInput = { values: closes, fastPeriod: 12, slowPeriod: 26, signalPeriod: 9, SimpleMAOscillator: false, SimpleMASignal: false };
+            const macdResults = technicalindicators.MACD.calculate(macdInput);
+            const lastMACD = macdResults[macdResults.length - 1];
+
+            document.getElementById('macdStatus').innerHTML = 
+                `Linha: ${lastMACD.MACD.toFixed(2)} | Sinal: ${lastMACD.signal.toFixed(2)}`;
+
+            // 2. Cálculo de Suporte e Resistência (Topos e Fundos)
+            const highs = formattedData.map(d => d.high);
+            const lows = formattedData.map(d => d.low);
+            const resistance = Math.max(...highs.slice(-24)); // Máxima das últimas 24h
+            const support = Math.min(...lows.slice(-24));    // Mínima das últimas 24h
+
+            document.getElementById('sup').innerText = support.toFixed(2);
+            document.getElementById('res').innerText = resistance.toFixed(2);
+
+            // Alerta (opcional para o navegador)
+            if (lastMACD.MACD > lastMACD.signal && macdResults[macdResults.length - 2].MACD <= macdResults[macdResults.length - 2].signal) {
+                console.log("ALERTA: Cruzamento de Alta!");
             }
         }
-        
-        // Executa a cada 5 minutos
-        setInterval(checkMACD, 300000);
-        checkMACD();
+
+        updateData();
+        setInterval(updateData, 60000); // Atualiza a cada minuto
     </script>
 </body>
 </html>
