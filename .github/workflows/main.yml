@@ -1,23 +1,33 @@
-name: Alerta Crypto SQL
+name: Crypto Monitor SQL
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/15 * * * *' # Roda a cada 15 minutos
   workflow_dispatch:
-permissions:
-  contents: write
+
 jobs:
-  run:
+  run-monitor:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
-      - run: node creator.js
-      - run: node monitor.js
-      - run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add crypto_history.db package.json package-lock.json
-          git commit -m "Update DB [skip ci]" || echo "No changes"
+
+      - name: Install SQLite3
+        run: npm install sqlite3
+
+      - name: Run Strategy
+        run: node monitor.js
+
+      - name: Commit Database
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add crypto_history.db
+          git commit -m "Update DB: Persist Candles [skip ci]" || echo "No changes to commit"
           git push
