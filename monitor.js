@@ -54,6 +54,12 @@ async function run() {
         const sd = math.stdDev(slice20);
         const lowerBB = sma20 - (sd * 2);
         const upperBB = sma20 + (sd * 2);
+        // No seu monitor.js, antes de enviar a mensagem:
+        const distSup = ((currentPrice - support) / support * 100).toFixed(2);
+        const finalMsg = `SOL: $${currentPrice}\nDist. Suporte: ${distSup}%\nMACD Hist: ${histogram.toFixed(4)}`;
+
+await fetch(`https://ntfy.sh{NTFY_TOPIC}`, { method: 'POST', body: finalMsg });
+
 
         // 5. Lógica de Alerta
         let msg = "";
