@@ -1,7 +1,7 @@
 name: Crypto Monitor SQL
 on:
   schedule:
-    - cron: '*/15 * * * *' # Roda a cada 15 minutos
+    - cron: '*/15 * * * *'
   workflow_dispatch:
 
 jobs:
@@ -18,8 +18,8 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install SQLite3
-        run: npm install sqlite3
+      - name: Run Creator
+        run: node creator.js
 
       - name: Run Strategy
         run: node monitor.js
@@ -28,6 +28,6 @@ jobs:
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
-          git add crypto_history.db
-          git commit -m "Update DB: Persist Candles [skip ci]" || echo "No changes to commit"
+          git add crypto_history.db package.json package-lock.json
+          git commit -m "Update DB and Environment [skip ci]" || echo "No changes"
           git push
