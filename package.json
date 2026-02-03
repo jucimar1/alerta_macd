@@ -1,0 +1,10 @@
+{
+  "name": "sol-sniper-bot",
+  "version": "1.0.0",
+  "description": "Monitor de Preço SOL com RSI e Volume",
+  "main": "sniper.js",
+  "dependencies": {
+    "node-fetch": "^2.6.7",
+    "sqlite3": "^5.1.6"
+  }
+}
