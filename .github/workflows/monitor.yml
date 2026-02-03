@@ -2,8 +2,13 @@ name: SOL Sniper Bot
 
 on:
   schedule:
-    - cron: '*/10 * * * *' # Roda a cada 10 minutos
-  workflow_dispatch:      # Permite rodar manualmente clicando no botão
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write    # Permite que o robô crie o index.html e salve
+  pages: write       # Permite publicar no GitHub Pages
+  id-token: write
 
 jobs:
   run-sniper:
@@ -18,10 +23,8 @@ jobs:
         env:
           NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
       
-      # Adicionado: Publica o index.html no GitHub Pages
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
-        if: ${{ github.ref == 'refs/heads/main' }} # Só publica da branch principal
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./ # Publica a pasta raiz, onde o index.html estará
+          publish_dir: ./
