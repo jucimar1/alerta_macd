@@ -1,168 +1,116 @@
-<script>
-    const CONFIG = {
-        symbol: 'SOLUSDT',
-        interval: '1m',
-        initialBalance: 10000,
-        apiUrl: 'https://api.binance.com',
-        wsUrl: 'wss://://stream.binance.com',
-        bbPeriod: 20, // Período para as Bandas de Bollinger
-        bbStdDev: 2    // Desvio Padrão (2 desvios é o padrão)
-    };
-
-    let state = {
-        balance: CONFIG.initialBalance,
-        lastPrice: 0,
-        history: [],
-        currentSup: 0,
-        currentRes: 0
-    };
-    
-    // Referências de UI
-    const priceEl = document.getElementById('price');
-    const supEl = document.getElementById('sup');
-    const resEl = document.getElementById('res');
-    const dSupEl = document.getElementById('dSup');
-    const balanceEl = document.getElementById('balance');
-
-    // 1. Configuração do Gráfico (Lightweight Charts)
-    const chart = LightweightCharts.createChart(document.getElementById('chart'), {
-        layout: { background: { color: '#0b0e11' }, textColor: '#848e9c' },
-        grid: { vertLines: { color: '#1f2226' }, horzLines: { color: '#1f2226' } },
-        timeScale: { timeVisible: true, secondsVisible: false }
-    });
-
-    const candleSeries = chart.addCandlestickSeries({ upColor: '#0ecb81', downColor: '#f6465d' });
-    
-    // Adiciona a série de VOLUME em um painel separado
-    const volumeSeries = chart.addHistogramSeries({
-        color: '#181a20',
-        priceScaleId: 'volume', // ID da escala de preço para o volume
-    });
-
-    // Adiciona as linhas das Bandas de Bollinger (Middle, Upper, Lower)
-    const bbMiddle = chart.addLineSeries({ color: '#f0b90b', lineWidth: 1, lineStyle: 0 }); // Laranja (SMA)
-    const bbUpper = chart.addLineSeries({ color: '#f6465d', lineWidth: 1, lineStyle: 2 }); // Vermelho tracejado
-    const bbLower = chart.addLineSeries({ color: '#0ecb81', lineWidth: 1, lineStyle: 2 }); // Verde tracejado
-
-
-    // 2. Coleta de Dados Históricos (REST API)
-    async function fetchHistory() {
-        try {
-            // Ajustado para obter dados de 1m para as BBands de 20 períodos
-            const res = await fetch(`${CONFIG.apiUrl}/klines?symbol=${CONFIG.symbol.toUpperCase()}&interval=${CONFIG.interval}&limit=120`);
-            const rawData = await res.json();
-            
-            state.history = rawData.map(d => ({
-                time: d / 1000, 
-                open: parseFloat(d), high: parseFloat(d), low: parseFloat(d), close: parseFloat(d), volume: parseFloat(d)
-            }));
-
-            // Formatando dados de Volume para o Lightweight Charts (cor baseada na direção da vela)
-            const volumeData = state.history.map((d, i) => ({
-                time: d.time,
-                value: d.volume,
-                color: d.close >= d.open ? 'rgba(14, 203, 129, 0.4)' : 'rgba(246, 70, 93, 0.4)'
-            }));
-
-            candleSeries.setData(state.history);
-            volumeSeries.setData(volumeData);
-            
-            calculateAndDrawBBands();
-            updateTechnicalLevels();
-
-        } catch (e) {
-            console.error("Erro ao carregar histórico inicial:", e);
-            priceEl.innerText = 'ERRO API';
-        }
-    }
-
-    // 3. Conexão em Tempo Real (WebSocket)
-    function initWebSocket() {
-        const ws = new WebSocket(`${CONFIG.wsUrl}/${CONFIG.symbol.toLowerCase()}@kline_${CONFIG.interval}`);
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOL Sniper Pro - Real Time</title>
+    <script src="https://unpkg.com"></script>
+    <style>
+        :root { --bg: #0b0e11; --card: #181a20; --accent: #f0b90b; --up: #0ecb81; --down: #f6465d; }
+        body { background: var(--bg); color: #eaecef; margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
+        /* Header & Stats */
+        .header { background: var(--card); padding: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; border-bottom: 2px solid #2b3139; }
+        .box { background: #2b3139; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid transparent; transition: 0.3s; }
+        .box:hover { border-color: var(--accent); }
+        .val { color: var(--accent); font-weight: bold; font-size: 1.2em; display: block; }
+        
+        /* Layout */
+        #chart { flex-grow: 1; position: relative; }
+        .trading-panel { background: var(--card); padding: 20px; border-top: 2px solid #2b3139; display: flex; justify-content: center; gap: 20px; }
+        
+        /* Buttons */
+        button { padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1em; transition: 0.2s; }
+        .btn-buy { background: var(--up); color: white; }
+        .btn-sell { background: var(--down); color: white; }
+        .btn-buy:active, .btn-sell:active { transform: scale(0.95); }
+        
+        /* Logs */
+        #logs { position: absolute; top: 10px; right: 10px; width: 250px; background: rgba(24, 26, 32, 0.8); padding: 10px; border-radius: 5px; font-size: 0.8em; max-height: 150px; overflow-y: auto; z-index: 10; border: 1px solid #444; }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="box">SOL Price <span id="price" class="val">0.00</span></div>
+        <div class="box">Dist. Suporte (24h) <span id="dSup" class="val">---</span></div>
+        <div class="box">Suporte 24h <span id="sup" class="val" style="color: var(--up)">---</span></div>
+        <div class="box">Resistência 24h <span id="res" class="val" style="color: var(--down)">---</span></div>
+        <div class="box">Saldo Simulado <span id="balance" class="val" style="color: #fff">U$ 10.000,00</span></div>
+    </div>
+
+    <div id="chart">
+        <div id="logs"><b>Ações Sniper:</b><br></div>
+    </div>
+
+    <div class="trading-panel">
+        <button class="btn-buy" onclick="trade('BUY')">COMPRAR (LONG)</button>
+        <button class="btn-sell" onclick="trade('SELL')">VENDER (SHORT)</button>
+    </div>
+
+    <script>
+        let lastClose = 0, currentSup = 0, currentRes = 0, balance = 10000;
+        
+        // 1. Configuração do Gráfico [Lightweight Charts](https://tradingview.github.io)
+        const chart = LightweightCharts.createChart(document.getElementById('chart'), {
+            layout: { background: { color: '#0b0e11' }, textColor: '#848e9c' },
+            grid: { vertLines: { color: '#1f2226' }, horzLines: { color: '#1f2226' } },
+            timeScale: { timeVisible: true, secondsVisible: false }
+        });
+        const candleSeries = chart.addCandlestickSeries({ upColor: '#0ecb81', downColor: '#f6465d', borderVisible: false });
+
+        // 2. Carregar Histórico Inicial via API REST
+        async function loadHistory() {
+            const res = await fetch('https://api.binance.com');
+            const data = await res.json();
+            const candles = data.map(d => ({
+                time: d[0] / 1000, open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4])
+            }));
+            candleSeries.setData(candles);
+            updateStats(candles);
+        }
+
+        // 3. Conexão em Tempo Real via [Binance WebSocket](https://binance-docs.github.io)
+        const ws = new WebSocket('wss://://stream.binance.com');
         ws.onmessage = (event) => {
-            const k = JSON.parse(event.data).k;
+            const msg = JSON.parse(event.data);
+            const k = msg.k;
             const candle = {
                 time: k.t / 1000, open: parseFloat(k.o), high: parseFloat(k.h), low: parseFloat(k.l), close: parseFloat(k.c)
             };
-            
-            // Atualiza o gráfico principal e o volume em tempo real
             candleSeries.update(candle);
-            volumeSeries.update({
-                time: candle.time,
-                value: parseFloat(k.v),
-                color: candle.close >= candle.open ? 'rgba(14, 203, 129, 0.4)' : 'rgba(246, 70, 93, 0.4)'
-            });
-
-            state.lastPrice = candle.close;
-            priceEl.innerText = `${state.lastPrice.toFixed(2)}`;
-            updateUIStats();
-
-            if (k.x) { // Quando a vela fecha, recalcula indicadores baseados em dados fechados
-                state.history.push(candle);
-                if (state.history.length > 120) state.history.shift();
-                calculateAndDrawBBands();
-                updateTechnicalLevels();
+            
+            lastClose = candle.close;
+            document.getElementById('price').innerText = `$${lastClose.toFixed(2)}`;
+            
+            // Cálculo de distância do suporte
+            if(currentSup > 0) {
+                const dist = ((lastClose - currentSup) / currentSup * 100).toFixed(2);
+                document.getElementById('dSup').innerText = `${dist}%`;
+                document.getElementById('dSup').style.color = dist < 1.0 ? '#0ecb81' : '#f0b90b';
             }
         };
 
-        ws.onclose = () => setTimeout(initWebSocket, 5000);
-    }
+        function updateStats(candles) {
+            currentSup = Math.min(...candles.map(c => c.low));
+            currentRes = Math.max(...candles.map(c => c.high));
+            document.getElementById('sup').innerText = `$${currentSup.toFixed(2)}`;
+            document.getElementById('res').innerText = `$${currentRes.toFixed(2)}`;
+        }
 
-    // 4. Funções de Cálculo (Bollinger Bands)
-    function calculateAndDrawBBands() {
-        const closes = state.history.map(c => c.close);
-        if (closes.length < CONFIG.bbPeriod) return;
-
-        const bbandData = [];
-        for (let i = CONFIG.bbPeriod - 1; i < closes.length; i++) {
-            const periodCloses = closes.slice(i - CONFIG.bbPeriod + 1, i + 1);
-            const sma = periodCloses.reduce((a, b) => a + b, 0) / CONFIG.bbPeriod;
+        // 4. Sistema de Paper Trading (Simulação)
+        function trade(type) {
+            const log = document.getElementById('logs');
+            const color = type === 'BUY' ? '#0ecb81' : '#f6465d';
+            log.innerHTML += `<span style="color:${color}">${type} @ ${lastClose.toFixed(2)}</span><br>`;
+            log.scrollTop = log.scrollHeight;
             
-            // Cálculo do Desvio Padrão
-            const stdDev = Math.sqrt(periodCloses.map(x => Math.pow(x - sma, 2)).reduce((a, b) => a + b, 0) / CONFIG.bbPeriod);
-
-            bbandData.push({
-                time: state.history[i].time,
-                middle: sma,
-                upper: sma + stdDev * CONFIG.bbStdDev,
-                lower: sma - stdDev * CONFIG.bbStdDev,
-            });
+            // Simulação de impacto no saldo (exemplo simplificado)
+            if(type === 'BUY') balance -= 100; else balance += 100;
+            document.getElementById('balance').innerText = `U$ ${balance.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
         }
-        
-        // Atualiza as linhas no gráfico
-        bbMiddle.setData(bbandData.map(d => ({ time: d.time, value: d.middle })));
-        bbUpper.setData(bbandData.map(d => ({ time: d.time, value: d.upper })));
-        bbLower.setData(bbandData.map(d => ({ time: d.time, value: d.lower })));
-    }
 
-    function updateTechnicalLevels() {
-        const last24 = state.history.slice(-24);
-        state.currentSup = Math.min(...last24.map(c => c.low));
-        state.currentRes = Math.max(...last24.map(c => c.high));
-        
-        supEl.innerText = `${state.currentSup.toFixed(2)}`;
-        resEl.innerText = `${state.currentRes.toFixed(2)}`;
-    }
-
-    function updateUIStats() {
-        if(state.currentSup > 0 && state.lastPrice > 0) {
-            const dist = ((state.lastPrice - state.currentSup) / state.currentSup * 100).toFixed(2);
-            dSupEl.innerText = `${dist}%`;
-            dSupEl.style.color = dist < 1.0 ? '#0ecb81' : '#f0b90b';
-        }
-    }
-
-    // 5. Sistema de Ordens (Paper Trading)
-    function trade(type) {
-        // Função para os botões COMPRAR/VENDER da sua imagem
-        alert(`Ordem de ${type} simulada em $${state.lastPrice.toFixed(2)}!`);
-        // Lógica de saldo continua a mesma, se você quiser adicionar aqui.
-    }
-
-    // Iniciar o carregamento dos dados e a conexão em tempo real
-    window.onload = () => {
-        fetchHistory().then(initWebSocket);
-        balanceEl.innerText = `U$ ${state.balance.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
-    };
-</script>
+        loadHistory();
+    </script>
+</body>
+</html>
