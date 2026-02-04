@@ -65,7 +65,7 @@
         // 2. Carregar Histórico Inicial (FIX: URL completa da Binance)
         async function loadHistory() {
             try {
-                const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=SOLUSDT&interval=1h&limit=100`);
+                const res = await fetch(`https://binance.com/api/v3/klines?symbol=SOLUSDT&interval=1h&limit=100`);
                 const data = await res.json();
                 const candles = data.map(d => ({
                     time: d[0] / 1000, 
