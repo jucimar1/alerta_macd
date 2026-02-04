@@ -4,35 +4,31 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SOL Sniper Pro - Real Time</title>
-    <script src="https://unpkg.com"></script>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
     <style>
         :root { --bg: #0b0e11; --card: #181a20; --accent: #f0b90b; --up: #0ecb81; --down: #f6465d; }
         body { background: var(--bg); color: #eaecef; margin: 0; font-family: 'Segoe UI', Tahoma, sans-serif; display: flex; flex-direction: column; height: 100vh; overflow: hidden; }
         
-        /* Header & Stats */
         .header { background: var(--card); padding: 15px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; border-bottom: 2px solid #2b3139; }
         .box { background: #2b3139; padding: 10px; border-radius: 6px; text-align: center; border: 1px solid transparent; transition: 0.3s; }
         .box:hover { border-color: var(--accent); }
         .val { color: var(--accent); font-weight: bold; font-size: 1.2em; display: block; }
         
-        /* Layout */
-        #chart { flex-grow: 1; position: relative; }
+        #chart { flex-grow: 1; position: relative; width: 100%; }
         .trading-panel { background: var(--card); padding: 20px; border-top: 2px solid #2b3139; display: flex; justify-content: center; gap: 20px; }
         
-        /* Buttons */
         button { padding: 12px 30px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; font-size: 1em; transition: 0.2s; }
         .btn-buy { background: var(--up); color: white; }
         .btn-sell { background: var(--down); color: white; }
         .btn-buy:active, .btn-sell:active { transform: scale(0.95); }
         
-        /* Logs */
-        #logs { position: absolute; top: 10px; right: 10px; width: 250px; background: rgba(24, 26, 32, 0.8); padding: 10px; border-radius: 5px; font-size: 0.8em; max-height: 150px; overflow-y: auto; z-index: 10; border: 1px solid #444; }
+        #logs { position: absolute; top: 10px; right: 10px; width: 250px; background: rgba(24, 26, 32, 0.9); padding: 10px; border-radius: 5px; font-size: 0.8em; max-height: 200px; overflow-y: auto; z-index: 10; border: 1px solid #444; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="box">SOL Price <span id="price" class="val">0.00</span></div>
+        <div class="box">SOL Price <span id="price" class="val">Carregando...</span></div>
         <div class="box">Dist. Suporte (24h) <span id="dSup" class="val">---</span></div>
         <div class="box">Suporte 24h <span id="sup" class="val" style="color: var(--up)">---</span></div>
         <div class="box">Resistência 24h <span id="res" class="val" style="color: var(--down)">---</span></div>
@@ -50,40 +46,59 @@
 
     <script>
         let lastClose = 0, currentSup = 0, currentRes = 0, balance = 10000;
+        const symbol = 'solusdt';
         
-        // 1. Configuração do Gráfico [Lightweight Charts](https://tradingview.github.io)
+        // 1. Configuração do Gráfico
         const chart = LightweightCharts.createChart(document.getElementById('chart'), {
             layout: { background: { color: '#0b0e11' }, textColor: '#848e9c' },
             grid: { vertLines: { color: '#1f2226' }, horzLines: { color: '#1f2226' } },
-            timeScale: { timeVisible: true, secondsVisible: false }
+            timeScale: { timeVisible: true, secondsVisible: false },
+            crosshair: { mode: LightweightCharts.CrosshairMode.Normal }
         });
         const candleSeries = chart.addCandlestickSeries({ upColor: '#0ecb81', downColor: '#f6465d', borderVisible: false });
 
-        // 2. Carregar Histórico Inicial via API REST
+        // Ajustar gráfico ao redimensionar janela
+        window.addEventListener('resize', () => {
+            chart.applyOptions({ width: document.getElementById('chart').clientWidth });
+        });
+
+        // 2. Carregar Histórico Inicial (FIX: URL completa da Binance)
         async function loadHistory() {
-            const res = await fetch('https://api.binance.com');
-            const data = await res.json();
-            const candles = data.map(d => ({
-                time: d[0] / 1000, open: parseFloat(d[1]), high: parseFloat(d[2]), low: parseFloat(d[3]), close: parseFloat(d[4])
-            }));
-            candleSeries.setData(candles);
-            updateStats(candles);
+            try {
+                const res = await fetch(`https://api.binance.com/api/v3/klines?symbol=SOLUSDT&interval=1h&limit=100`);
+                const data = await res.json();
+                const candles = data.map(d => ({
+                    time: d[0] / 1000, 
+                    open: parseFloat(d[1]), 
+                    high: parseFloat(d[2]), 
+                    low: parseFloat(d[3]), 
+                    close: parseFloat(d[4])
+                }));
+                candleSeries.setData(candles);
+                updateStats(candles);
+                
+                lastClose = candles[candles.length - 1].close;
+                document.getElementById('price').innerText = `$${lastClose.toFixed(2)}`;
+            } catch (e) { console.error("Erro ao carregar histórico", e); }
         }
 
-        // 3. Conexão em Tempo Real via [Binance WebSocket](https://binance-docs.github.io)
-        const ws = new WebSocket('wss://://stream.binance.com');
+        // 3. Conexão WebSocket (FIX: URL corrigida)
+        const ws = new WebSocket(`wss://stream.binance.com:9443/ws/${symbol}@kline_1h`);
         ws.onmessage = (event) => {
             const msg = JSON.parse(event.data);
             const k = msg.k;
             const candle = {
-                time: k.t / 1000, open: parseFloat(k.o), high: parseFloat(k.h), low: parseFloat(k.l), close: parseFloat(k.c)
+                time: k.t / 1000, 
+                open: parseFloat(k.o), 
+                high: parseFloat(k.h), 
+                low: parseFloat(k.l), 
+                close: parseFloat(k.c)
             };
             candleSeries.update(candle);
             
             lastClose = candle.close;
             document.getElementById('price').innerText = `$${lastClose.toFixed(2)}`;
             
-            // Cálculo de distância do suporte
             if(currentSup > 0) {
                 const dist = ((lastClose - currentSup) / currentSup * 100).toFixed(2);
                 document.getElementById('dSup').innerText = `${dist}%`;
@@ -98,14 +113,15 @@
             document.getElementById('res').innerText = `$${currentRes.toFixed(2)}`;
         }
 
-        // 4. Sistema de Paper Trading (Simulação)
         function trade(type) {
             const log = document.getElementById('logs');
             const color = type === 'BUY' ? '#0ecb81' : '#f6465d';
-            log.innerHTML += `<span style="color:${color}">${type} @ ${lastClose.toFixed(2)}</span><br>`;
+            const time = new Date().toLocaleTimeString();
+            
+            log.innerHTML += `<div style="color:${color}">[${time}] ${type} @ ${lastClose.toFixed(2)}</div>`;
             log.scrollTop = log.scrollHeight;
             
-            // Simulação de impacto no saldo (exemplo simplificado)
+            // Simulação simples de lucro/perda
             if(type === 'BUY') balance -= 100; else balance += 100;
             document.getElementById('balance').innerText = `U$ ${balance.toLocaleString('pt-BR', {minimumFractionDigits: 2})}`;
         }
