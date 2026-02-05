@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SOL Sniper PRO - GitHub Pages</title>
-  <!-- Font Awesome para ícones -->
+  <title>SOL Sniper PRO - Multi-Timeframe MACD 1h</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     * {
@@ -24,7 +23,7 @@
     }
     
     .container {
-      max-width: 1400px;
+      max-width: 1600px;
       margin: 0 auto;
     }
     
@@ -35,24 +34,24 @@
     }
     
     h1 {
-      font-size: 3.5rem;
+      font-size: 3.8rem;
       margin-bottom: 15px;
-      background: linear-gradient(90deg, #58a6ff, #8a6bff, #28a745, #17a2b8);
+      background: linear-gradient(90deg, #58a6ff, #8a6bff, #28a745, #17a2b8, #ff9800);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      text-shadow: 0 0 20px rgba(88, 166, 255, 0.3);
+      text-shadow: 0 0 25px rgba(88, 166, 255, 0.4);
       letter-spacing: -0.5px;
     }
     
     .subtitle {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       color: #8b949e;
-      margin-top: 10px;
-      max-width: 800px;
+      margin-top: 15px;
+      max-width: 900px;
       margin-left: auto;
       margin-right: auto;
-      line-height: 1.5;
+      line-height: 1.6;
     }
     
     .status-bar {
@@ -89,7 +88,7 @@
     
     .dashboard-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
       gap: 25px;
       margin-bottom: 30px;
     }
@@ -151,11 +150,11 @@
     }
     
     .price-display {
-      font-size: 4.2rem;
+      font-size: 4.5rem;
       font-weight: 800;
       text-align: center;
       margin: 25px 0;
-      background: linear-gradient(90deg, #28a745, #34d399);
+      background: linear-gradient(90deg, #28a745, #34d399, #58a6ff);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -524,23 +523,156 @@
       font-size: 0.9rem;
     }
     
+    .macd-chart-container {
+      margin-top: 25px;
+      padding: 20px;
+      background: rgba(30, 34, 40, 0.5);
+      border-radius: 12px;
+      border: 1px solid #30363d;
+    }
+    
+    .macd-chart-title {
+      text-align: center;
+      font-size: 1.3rem;
+      margin-bottom: 15px;
+      color: #17a2b8;
+      font-weight: 600;
+    }
+    
+    canvas {
+      width: 100%;
+      height: 300px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.2);
+      border: 1px solid #30363d;
+    }
+    
+    .macd-legend {
+      display: flex;
+      justify-content: center;
+      gap: 25px;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .legend-color {
+      width: 20px;
+      height: 20px;
+      border-radius: 4px;
+    }
+    
+    .context-timing-explanation {
+      background: linear-gradient(135deg, rgba(88, 166, 255, 0.1), rgba(139, 92, 236, 0.1));
+      border: 1px solid rgba(88, 166, 255, 0.3);
+      border-radius: 16px;
+      padding: 30px;
+      margin: 30px 0;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .context-timing-explanation::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: linear-gradient(90deg, #58a6ff, #8b5cf6, #28a745);
+    }
+    
+    .context-timing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+    
+    .context-card, .timing-card {
+      background: rgba(22, 27, 34, 0.7);
+      padding: 20px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .context-card {
+      border-left: 4px solid #58a6ff;
+    }
+    
+    .timing-card {
+      border-left: 4px solid #28a745;
+    }
+    
+    .context-title, .timing-title {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .context-title {
+      color: #58a6ff;
+    }
+    
+    .timing-title {
+      color: #28a745;
+    }
+    
+    .context-timing-comparison {
+      background: rgba(30, 34, 40, 0.6);
+      padding: 20px;
+      border-radius: 12px;
+      margin-top: 25px;
+      border: 1px solid #30363d;
+    }
+    
+    .comparison-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.95rem;
+    }
+    
+    .comparison-table th {
+      background: rgba(88, 166, 255, 0.2);
+      padding: 12px;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    .comparison-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    
+    .comparison-table tr:hover td {
+      background: rgba(255, 255, 255, 0.03);
+    }
+    
     @media (max-width: 1100px) {
       .dashboard-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       }
     }
     
     @media (max-width: 768px) {
       h1 {
-        font-size: 2.7rem;
+        font-size: 2.8rem;
       }
       
       .subtitle {
-        font-size: 1.15rem;
+        font-size: 1.2rem;
       }
       
       .price-display {
-        font-size: 3.2rem;
+        font-size: 3.3rem;
       }
       
       .dashboard-grid {
@@ -568,6 +700,14 @@
         padding: 15px;
         font-size: 1rem;
       }
+      
+      .context-timing-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      canvas {
+        height: 250px;
+      }
     }
     
     @media (max-width: 480px) {
@@ -576,15 +716,15 @@
       }
       
       h1 {
-        font-size: 2.3rem;
+        font-size: 2.4rem;
       }
       
       .subtitle {
-        font-size: 1rem;
+        font-size: 1.05rem;
       }
       
       .price-display {
-        font-size: 2.7rem;
+        font-size: 2.8rem;
       }
       
       .metric-grid {
@@ -615,6 +755,10 @@
         width: 50px;
         height: 50px;
       }
+      
+      canvas {
+        height: 200px;
+      }
     }
   </style>
 </head>
@@ -624,9 +768,9 @@
       <div class="spinner"></div>
       <div class="loading-text">Carregando dados da Binance...</div>
       <div class="github-warning">
-        <strong>🚀 GitHub Pages - Configuração Automática</strong><br>
-        Este dashboard está configurado para funcionar no GitHub Pages!<br>
-        Usando proxy CORS para acessar a API da Binance.<br>
+        <strong>🚀 GitHub Pages - Multi-Timeframe MACD</strong><br>
+        Dashboard com análise Contexto (5m) + Timing (1h)<br>
+        Incluindo gráfico visual do MACD em tempo real!<br>
         <small style="display: block; margin-top: 10px; opacity: 0.8;">
           Atualizações a cada 60 segundos • Dados em tempo real
         </small>
@@ -637,22 +781,33 @@
     </div>
     
     <div id="dashboardContent" style="display: none;">
-      <!-- Conteúdo do dashboard será inserido aqui via JS -->
+      <!-- Conteúdo será inserido aqui -->
     </div>
   </div>
 
   <script>
     /**
-     * SOL Sniper PRO - Versão GitHub Pages
-     * Sistema de Trading com Timeframes Invertidos
+     * SOL Sniper PRO - Multi-Timeframe com Gráfico MACD 1h
      * 
-     * ✅ Funciona 100% no GitHub Pages
-     * ✅ Usa proxy CORS público para contornar restrições
-     * ✅ Cache automático para offline
-     * ✅ Atualização automática a cada 60 segundos
+     * CONCEITOS:
+     * 
+     * CONTEXTO (5m) = Análise de curto prazo
+     * - Identifica oportunidades imediatas
+     * - Usa RSI, Suporte/Resistência, Volume
+     * - Responde rápido às mudanças de mercado
+     * 
+     * TIMING (1h) = Confirmação de longo prazo  
+     * - Valida a direção principal da tendência
+     * - Usa MACD (12, 26, 9) como filtro
+     * - Evita falsos sinais do curto prazo
+     * 
+     * ESTRATÉGIA INVERTIDA:
+     * Tradicional: 1h = contexto, 5m = timing
+     * Esta versão: 5m = contexto, 1h = timing
+     * Benefício: Ideal para day traders que querem
+     *            entradas rápidas com segurança
      */
 
-    // Configurações do sistema
     const CONFIG = {
       SYMBOL: 'SOLUSDT',
       INTERVAL_5M: '5m',
@@ -666,19 +821,16 @@
       UPDATE_INTERVAL: 60000,
       CANDLES_LIMIT_5M: 100,
       CANDLES_LIMIT_1H: 100,
-      DB_NAME: 'sol_sniper_github_pages',
-      // Proxy CORS para GitHub Pages
+      DB_NAME: 'sol_sniper_multitimeframe',
       CORS_PROXY: 'https://api.allorigins.win/raw?url='
     };
 
-    // Banco de dados local (localStorage)
     let db = {
       prices: [],
       signals: [],
       lastSuccessfulData: null
     };
 
-    // Carregar dados do localStorage
     function loadDb() {
       try {
         const savedPrices = localStorage.getItem(`${CONFIG.DB_NAME}_prices`);
@@ -694,7 +846,6 @@
       }
     }
 
-    // Salvar dados no localStorage
     function saveDb() {
       try {
         localStorage.setItem(`${CONFIG.DB_NAME}_prices`, JSON.stringify(db.prices));
@@ -707,7 +858,6 @@
       }
     }
 
-    // Formatar número com vírgula (padrão brasileiro)
     function formatBR(number, decimals = 2) {
       return number.toLocaleString('pt-BR', { 
         minimumFractionDigits: decimals, 
@@ -715,7 +865,6 @@
       });
     }
 
-    // Calcular RSI
     function calculateRSI(candles, period = 14) {
       if (candles.length < period + 1) return 50;
       
@@ -737,7 +886,6 @@
       return 100 - (100 / (1 + rs));
     }
 
-    // Calcular suporte e resistência
     function calculateSupportResistance(candles, period = 12) {
       if (candles.length < period) {
         return { support: 0, resistance: 0, distanceToSupport: 0, distanceToResistance: 0, currentPrice: 0 };
@@ -760,7 +908,6 @@
       };
     }
 
-    // Analisar volume
     function analyzeVolume(candles, period = 12) {
       if (candles.length < period) {
         return { currentVolume: 0, avgVolume: 0, ratio: 1, status: 'unknown' };
@@ -781,7 +928,6 @@
       return { currentVolume, avgVolume, ratio, status };
     }
 
-    // Calcular EMA
     function calculateEMA(candles, period) {
       if (candles.length < period) return [];
       
@@ -805,10 +951,9 @@
       return ema;
     }
 
-    // Calcular MACD
     function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
       if (candles.length < slowPeriod + signalPeriod) {
-        return { macdLine: [], signalLine: [], histogram: [] };
+        return { macdLine: [], signalLine: [], histogram: [], fastEMA: [], slowEMA: [] };
       }
       
       const fastEMA = calculateEMA(candles, fastPeriod);
@@ -842,7 +987,6 @@
       };
     }
 
-    // Analisar MACD
     function analyzeMACD(macdData) {
       if (!macdData || macdData.histogram.length < 2) {
         return {
@@ -892,7 +1036,6 @@
       };
     }
 
-    // Verificar sinais
     function checkSignals(price, rsi, sr, volume, macdAnalysis) {
       const rsiOversold = rsi < 30;
       const rsiOverbought = rsi > 70;
@@ -975,7 +1118,134 @@
       };
     }
 
-    // Gerar HTML do dashboard
+    // Função para desenhar gráfico MACD
+    function drawMACDChart(canvasId, macdData, macdAnalysis) {
+      const canvas = document.getElementById(canvasId);
+      if (!canvas) return;
+      
+      const ctx = canvas.getContext('2d');
+      const width = canvas.width;
+      const height = canvas.height;
+      
+      // Limpar canvas
+      ctx.clearRect(0, 0, width, height);
+      
+      // Configurar escala
+      const padding = 40;
+      const chartWidth = width - padding * 2;
+      const chartHeight = height - padding * 2;
+      
+      // Encontrar valores máximos e mínimos
+      const allValues = [
+        ...macdData.macdLine.slice(-50),
+        ...macdData.signalLine.slice(-50),
+        ...macdData.histogram.slice(-50),
+        0
+      ];
+      
+      const maxValue = Math.max(...allValues.map(Math.abs)) * 1.2;
+      const minValue = -maxValue;
+      
+      // Função para mapear valores para coordenadas Y
+      const scaleY = (value) => {
+        return height - padding - ((value - minValue) / (maxValue - minValue)) * chartHeight;
+      };
+      
+      // Desenhar linha zero
+      ctx.beginPath();
+      ctx.moveTo(padding, scaleY(0));
+      ctx.lineTo(width - padding, scaleY(0));
+      ctx.strokeStyle = '#8b949e';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([5, 5]);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      
+      // Desenhar eixo Y labels
+      ctx.fillStyle = '#8b949e';
+      ctx.font = '10px Arial';
+      ctx.textAlign = 'right';
+      
+      const labelValues = [maxValue, maxValue/2, 0, minValue/2, minValue];
+      labelValues.forEach(val => {
+        ctx.fillText(formatBR(val, 6), padding - 10, scaleY(val) + 3);
+      });
+      
+      // Desenhar histograma
+      const histogramSlice = macdData.histogram.slice(-50);
+      const barWidth = chartWidth / histogramSlice.length;
+      
+      histogramSlice.forEach((value, index) => {
+        const x = padding + index * barWidth;
+        const yZero = scaleY(0);
+        const yValue = scaleY(value);
+        
+        ctx.fillStyle = value >= 0 ? 'rgba(40, 167, 69, 0.6)' : 'rgba(220, 53, 69, 0.6)';
+        ctx.fillRect(x, Math.min(yZero, yValue), barWidth - 2, Math.abs(yZero - yValue));
+      });
+      
+      // Desenhar linha MACD
+      ctx.beginPath();
+      const macdSlice = macdData.macdLine.slice(-50);
+      macdSlice.forEach((value, index) => {
+        const x = padding + index * barWidth + barWidth/2;
+        const y = scaleY(value);
+        
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#58a6ff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Desenhar linha Signal
+      ctx.beginPath();
+      const signalSlice = macdData.signalLine.slice(-50);
+      signalSlice.forEach((value, index) => {
+        const x = padding + index * barWidth + barWidth/2;
+        const y = scaleY(value);
+        
+        if (index === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      });
+      ctx.strokeStyle = '#8b5cf6';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+      
+      // Destacar crossover se houver
+      if (macdAnalysis.crossover !== 'none') {
+        const lastX = padding + (histogramSlice.length - 1) * barWidth + barWidth/2;
+        const lastY = scaleY(macdAnalysis.macdValue);
+        
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, 8, 0, Math.PI * 2);
+        ctx.fillStyle = macdAnalysis.crossover === 'bullish' ? 'rgba(40, 167, 69, 0.3)' : 'rgba(220, 53, 69, 0.3)';
+        ctx.fill();
+        
+        ctx.beginPath();
+        ctx.arc(lastX, lastY, 6, 0, Math.PI * 2);
+        ctx.strokeStyle = macdAnalysis.crossover === 'bullish' ? '#28a745' : '#dc3545';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+      }
+      
+      // Legenda
+      ctx.font = '11px Arial';
+      ctx.textAlign = 'left';
+      
+      ctx.fillStyle = '#58a6ff';
+      ctx.fillText('MACD Line', padding + 10, padding + 15);
+      
+      ctx.fillStyle = '#8b5cf6';
+      ctx.fillText('Signal Line', padding + 120, padding + 15);
+      
+      ctx.fillStyle = '#28a745';
+      ctx.fillText('Histograma +', padding + 240, padding + 15);
+      
+      ctx.fillStyle = '#dc3545';
+      ctx.fillText('Histograma -', padding + 380, padding + 15);
+    }
+
     function generateDashboard(data) {
       const {
         price,
@@ -984,7 +1254,8 @@
         volume,
         macdAnalysis,
         signals,
-        timestamp
+        timestamp,
+        macdData1h
       } = data;
       
       const rsiStatus = rsi < 30 ? 'Sobrevendido (COMPRA)' : (rsi > 70 ? 'Sobrecomprado (VENDA)' : 'Neutro');
@@ -1001,9 +1272,9 @@
       
       return `
         <header>
-          <h1>🎯 SOL Sniper PRO <span class="timeframe-badge">GitHub Pages</span></h1>
+          <h1>🎯 SOL Sniper PRO <span class="timeframe-badge">Multi-Timeframe MACD 1h</span></h1>
           <div class="subtitle">
-            Sistema avançado com análise invertida: Contexto 5m + Timing 1h para entradas rápidas com confirmação de longo prazo
+            Sistema avançado com análise invertida: <strong>Contexto 5m</strong> + <strong>Timing 1h</strong> com gráfico visual MACD em tempo real
           </div>
           
           <div class="status-bar">
@@ -1011,15 +1282,113 @@
             <span><strong>Conectado via Proxy CORS</strong> • Atualizando a cada 60 segundos</span>
           </div>
           
+          <div class="context-timing-explanation">
+            <h2 style="color: #c9d1d9; margin-bottom: 20px; text-align: center; font-size: 1.8rem;">
+              📊 <strong>CONTEXTO vs TIMING</strong> - Estratégia Multi-Timeframe
+            </h2>
+            
+            <div class="context-timing-grid">
+              <div class="context-card">
+                <div class="context-title">
+                  <i class="fas fa-stopwatch"></i> CONTEXTO (5m)
+                </div>
+                <p><strong>O que é:</strong> Análise de <span style="color: #58a6ff; font-weight: 600;">curto prazo</span> para identificar oportunidades imediatas</p>
+                <p><strong>Função:</strong> Detectar movimentos antes que aconteçam no timeframe maior</p>
+                <p><strong>Indicadores:</strong></p>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                  <li><strong>RSI (14):</strong> Condições de sobrecompra/sobrevenda</li>
+                  <li><strong>Suporte/Resistência:</strong> Níveis recentes (última 1h)</li>
+                  <li><strong>Volume:</strong> Força do movimento atual</li>
+                </ul>
+                <p><strong>Por que 5m:</strong> Responde rápido às mudanças, ideal para day trading</p>
+              </div>
+              
+              <div class="timing-card">
+                <div class="timing-title">
+                  <i class="fas fa-clock"></i> TIMING (1h)
+                </div>
+                <p><strong>O que é:</strong> Análise de <span style="color: #28a745; font-weight: 600;">longo prazo</span> para confirmação de direção</p>
+                <p><strong>Função:</strong> Validar se a tendência principal está alinhada</p>
+                <p><strong>Indicador Principal:</strong></p>
+                <ul style="padding-left: 20px; margin: 10px 0;">
+                  <li><strong>MACD (12, 26, 9):</strong></li>
+                  <ul style="padding-left: 20px; margin: 8px 0;">
+                    <li>MACD Line = EMA 12 - EMA 26</li>
+                    <li>Signal Line = EMA 9 do MACD Line</li>
+                    <li>Histograma = MACD Line - Signal Line</li>
+                  </ul>
+                </ul>
+                <p><strong>Por que 1h:</strong> Filtra ruído, confirma tendência real</p>
+              </div>
+            </div>
+            
+            <div class="context-timing-comparison">
+              <h3 style="color: #17a2b8; margin-bottom: 15px;">
+                <i class="fas fa-exchange-alt"></i> Estratégia "Timeframes Invertidos"
+              </h3>
+              <table class="comparison-table">
+                <thead>
+                  <tr>
+                    <th>Abordagem Tradicional</th>
+                    <th>Abordagem Invertida (Este Sistema)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1h = Contexto (direção principal)</td>
+                    <td><strong style="color: #58a6ff;">5m = Contexto</strong> (oportunidade)</td>
+                  </tr>
+                  <tr>
+                    <td>5m = Timing (entrada)</td>
+                    <td><strong style="color: #28a745;">1h = Timing</strong> (confirmação)</td>
+                  </tr>
+                  <tr>
+                    <td>Para swing traders</td>
+                    <td>Para <strong>day traders rápidos</strong></td>
+                  </tr>
+                  <tr>
+                    <td>Entradas menos frequentes</td>
+                    <td>Entradas <strong>rápidas + segurança</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+              
+              <div style="margin-top: 20px; padding: 15px; background: rgba(23, 162, 184, 0.15); border-radius: 8px;">
+                <h4 style="color: #17a2b8; margin-bottom: 10px;">
+                  <i class="fas fa-brain"></i> Lógica da Estratégia:
+                </h4>
+                <p><strong style="color: #28a745;">SINAL DE COMPRA:</strong></p>
+                <ul style="padding-left: 20px; margin: 8px 0;">
+                  <li>5m: Preço próximo do suporte <strong>OU</strong> RSI sobrevendido</li>
+                  <li>5m: Volume acima da média (confirmação)</li>
+                  <li>1h: MACD bullish (crossover de alta ou acima de zero)</li>
+                </ul>
+                <p style="margin-top: 10px;"><strong style="color: #dc3545;">SINAL DE VENDA:</strong></p>
+                <ul style="padding-left: 20px; margin: 8px 0;">
+                  <li>5m: Preço próximo da resistência <strong>OU</strong> RSI sobrecomprado</li>
+                  <li>5m: Volume acima da média (confirmação)</li>
+                  <li>1h: MACD bearish (crossover de baixa ou abaixo de zero)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          
           <div class="strategy-info">
-            <h3><i class="fas fa-brain"></i> Estratégia de Trading com Timeframes Invertidos</h3>
-            <p>Esta configuração inverte a lógica tradicional de análise técnica para traders de curto prazo:</p>
+            <h3><i class="fas fa-calculator"></i> Cálculo do MACD (1h) - Explicação Técnica</h3>
+            <p><strong>Fórmula Completa:</strong></p>
             <ul>
-              <li><strong>⏱️ Contexto 5m:</strong> Análise de curto prazo para identificar tendências imediatas (RSI, Suporte/Resistência, Volume)</li>
-              <li><strong>⏰ Timing 1h:</strong> Confirmação de timing de entrada/saída usando MACD e análise de longo prazo</li>
-              <li><strong>🎯 Sinal de COMPRA:</strong> Tendência de alta no timeframe 5m + Confirmação MACD 1h (crossover de alta)</li>
-              <li><strong>🎯 Sinal de VENDA:</strong> Tendência de baixa no timeframe 5m + Confirmação MACD 1h (crossover de baixa)</li>
-              <li><strong>🔄 Benefício:</strong> Ideal para day traders que buscam entradas rápidas com segurança de confirmação de longo prazo</li>
+              <li><strong>Passo 1:</strong> Calcular EMA de 12 períodos (Fast EMA)</li>
+              <li><strong>Passo 2:</strong> Calcular EMA de 26 períodos (Slow EMA)</li>
+              <li><strong>Passo 3:</strong> MACD Line = Fast EMA - Slow EMA</li>
+              <li><strong>Passo 4:</strong> Signal Line = EMA de 9 períodos do MACD Line</li>
+              <li><strong>Passo 5:</strong> Histograma = MACD Line - Signal Line</li>
+            </ul>
+            <p><strong>Interpretação:</strong></p>
+            <ul>
+              <li><span style="color: #28a745;">MACD acima de zero</span> = Tendência de alta</li>
+              <li><span style="color: #dc3545;">MACD abaixo de zero</span> = Tendência de baixa</li>
+              <li><span style="color: #28a745;">Crossover de alta</span> (Histograma cruza de negativo para positivo) = Sinal de compra</li>
+              <li><span style="color: #dc3545;">Crossover de baixa</span> (Histograma cruza de positivo para negativo) = Sinal de venda</li>
             </ul>
           </div>
         </header>
@@ -1035,7 +1404,7 @@
             </div>
             <div class="config-item">
               <span class="config-label">Contexto (TF)</span>
-              <div class="config-value">5m</div>
+              <div class="config-value">5m <span class="timeframe-badge">RSI + S/R + Vol</span></div>
             </div>
             <div class="config-item">
               <span class="config-label">Timing (TF)</span>
@@ -1094,7 +1463,7 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <i class="fas fa-chart-line"></i> Indicadores 5m
+                <i class="fas fa-chart-line"></i> Indicadores 5m (Contexto)
               </div>
             </div>
             <div class="metric-grid">
@@ -1124,7 +1493,7 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <i class="fas fa-bullseye"></i> Análise 5m
+                <i class="fas fa-bullseye"></i> Análise 5m (Contexto)
               </div>
             </div>
             <div class="metric-grid">
@@ -1160,13 +1529,13 @@
             <div class="metric-grid">
               <div class="metric-item">
                 <span class="metric-label">MACD</span>
-                <span class="metric-value" style="color: ${macdAnalysis.signal === 'bullish' ? '#28a745' : (macdAnalysis.signal === 'bearish' ? '#dc3545' : '#8b949e')}">${formatBR(macdAnalysis.macdValue, 4)}</span>
+                <span class="metric-value" style="color: ${macdAnalysis.signal === 'bullish' ? '#28a745' : (macdAnalysis.signal === 'bearish' ? '#dc3545' : '#8b949e')}">${formatBR(macdAnalysis.macdValue, 6)}</span>
                 <span class="metric-badge badge-macd" style="color: ${macdAnalysis.signal === 'bullish' ? '#28a745' : (macdAnalysis.signal === 'bearish' ? '#dc3545' : '#8b949e')}">${macdAnalysis.signal.toUpperCase()}</span>
               </div>
               <div class="metric-item">
                 <span class="metric-label">Signal Line</span>
-                <span class="metric-value">${formatBR(macdAnalysis.signalLineValue, 4)}</span>
-                <span class="metric-badge badge-macd">9-período</span>
+                <span class="metric-value">${formatBR(macdAnalysis.signalLineValue, 6)}</span>
+                <span class="metric-badge badge-macd">EMA 9</span>
               </div>
               <div class="metric-item">
                 <span class="metric-label">Histograma</span>
@@ -1179,11 +1548,36 @@
                 <span class="metric-badge badge-macd">${macdAnalysis.crossover === 'bullish' ? 'CONFIRMADO' : (macdAnalysis.crossover === 'bearish' ? 'CONFIRMADO' : 'AGUARDANDO')}</span>
               </div>
             </div>
+            
+            <div class="macd-chart-container">
+              <div class="macd-chart-title">
+                <i class="fas fa-chart-bar"></i> Gráfico MACD 1h (Últimas 50 velas)
+              </div>
+              <canvas id="macdChart" width="800" height="300"></canvas>
+              <div class="macd-legend">
+                <div class="legend-item">
+                  <div class="legend-color" style="background: #58a6ff;"></div>
+                  <span>MACD Line (12,26)</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background: #8b5cf6;"></div>
+                  <span>Signal Line (9)</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background: rgba(40, 167, 69, 0.6);"></div>
+                  <span>Histograma +</span>
+                </div>
+                <div class="legend-item">
+                  <div class="legend-color" style="background: rgba(220, 53, 69, 0.6);"></div>
+                  <span>Histograma -</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
         
         <div class="footer">
-          <p><i class="fas fa-robot"></i> SOL Sniper PRO v5.0 • GitHub Pages Edition</p>
+          <p><i class="fas fa-robot"></i> SOL Sniper PRO v6.0 • Multi-Timeframe MACD 1h</p>
           <p>Fonte: Binance API via Proxy CORS • Atualização automática a cada 60s</p>
           <div class="update-time" id="countdownTimer">Próxima atualização em: 60s</div>
           ${db.lastSuccessfulData ? `<div class="last-update">Última atualização: ${new Date(db.lastSuccessfulData.timestamp).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', hour12: false })}</div>` : ''}
@@ -1197,7 +1591,6 @@
       `;
     }
 
-    // Atualizar contador regressivo
     function startCountdown() {
       let seconds = 60;
       const timerElement = document.getElementById('countdownTimer');
@@ -1217,27 +1610,28 @@
       return interval;
     }
 
-    // Função principal - FUNCIONA NO GITHUB PAGES!
     async function runAnalysis() {
-      console.log('\n--- SOL Sniper PRO (GitHub Pages): ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' ---');
+      console.log('\n--- SOL Sniper PRO Multi-Timeframe: ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' ---');
       
       try {
         loadDb();
         
-        // URLs da Binance SEM espaços extras
         const url5m = `https://api.binance.com/api/v3/klines?symbol=${CONFIG.SYMBOL}&interval=${CONFIG.INTERVAL_5M}&limit=${CONFIG.CANDLES_LIMIT_5M}`;
         const url1h = `https://api.binance.com/api/v3/klines?symbol=${CONFIG.SYMBOL}&interval=${CONFIG.INTERVAL_1H}&limit=${CONFIG.CANDLES_LIMIT_1H}`;
         
-        // Usar proxy CORS para GitHub Pages
         const proxyUrl5m = CONFIG.CORS_PROXY + encodeURIComponent(url5m);
         const proxyUrl1h = CONFIG.CORS_PROXY + encodeURIComponent(url1h);
         
         console.log('📡 Buscando dados via proxy CORS...');
         
-        // Buscar dados 5m
         const response5m = await fetch(proxyUrl5m);
         if (!response5m.ok) throw new Error(`Erro API 5m: ${response5m.status}`);
         const data5m = await response5m.json();
+        
+        // ✅ Verificação crítica de dados
+        if (!Array.isArray(data5m)) {
+          throw new Error('Resposta da API 5m não é um array válido');
+        }
         
         const candles5m = data5m.map(d => ({
           time: d[0], 
@@ -1247,10 +1641,14 @@
           volume: parseFloat(d[5])
         }));
 
-        // Buscar dados 1h
         const response1h = await fetch(proxyUrl1h);
         if (!response1h.ok) throw new Error(`Erro API 1h: ${response1h.status}`);
         const data1h = await response1h.json();
+        
+        // ✅ Verificação crítica de dados
+        if (!Array.isArray(data1h)) {
+          throw new Error('Resposta da API 1h não é um array válido');
+        }
         
         const candles1h = data1h.map(d => ({
           time: d[0], 
@@ -1272,12 +1670,11 @@
 
         console.log(`✅ Dados recebidos com sucesso!`);
         console.log(`💵 Preço: R$${formatBR(currentPrice, 2)} | RSI: ${formatBR(rsiValue, 2)} | Vol: ${formatBR(volumeInfo.ratio, 2)}x`);
+        console.log(`📊 MACD 1h: ${formatBR(macdAnalysis.macdValue, 6)} | Histograma: ${formatBR(macdAnalysis.histogramValue, 6)} | Crossover: ${macdAnalysis.crossover}`);
 
-        // Salvar no banco de dados
         db.prices.push({ timestamp: Date.now(), price: currentPrice });
         if (db.prices.length > 1000) db.prices = db.prices.slice(-1000);
 
-        // Salvar sinal forte
         if (signals.strength === 'ALTA' && signals.macdConfirmation) {
           const lastSignal = db.signals[db.signals.length - 1];
           const isDifferent = !lastSignal || 
@@ -1300,26 +1697,26 @@
           }
         }
 
-        // Salvar dados bem-sucedidos
         db.lastSuccessfulData = {
           price: currentPrice,
           rsi: rsiValue,
           sr,
           volume: volumeInfo,
           macdAnalysis,
+          macdData1h: macdData,
           signals,
           timestamp: new Date()
         };
         
         saveDb();
 
-        // Renderizar dashboard
         renderDashboard({
           price: currentPrice,
           rsi: rsiValue,
           sr,
           volume: volumeInfo,
           macdAnalysis,
+          macdData1h: macdData,
           signals,
           timestamp: new Date()
         });
@@ -1351,16 +1748,20 @@
       }
     }
 
-    // Renderizar dashboard
     function renderDashboard(data) {
       document.getElementById('loadingScreen').style.display = 'none';
       const dashboardContent = document.getElementById('dashboardContent');
       dashboardContent.style.display = 'block';
       dashboardContent.innerHTML = generateDashboard(data);
+      
+      // Desenhar gráfico MACD após o DOM estar pronto
+      setTimeout(() => {
+        drawMACDChart('macdChart', data.macdData1h, data.macdAnalysis);
+      }, 100);
+      
       startCountdown();
     }
 
-    // Renderizar erro
     function renderError(error) {
       document.getElementById('loadingScreen').style.display = 'none';
       
@@ -1402,7 +1803,6 @@
       `;
     }
 
-    // Iniciar aplicação
     document.addEventListener('DOMContentLoaded', () => {
       loadDb();
       
