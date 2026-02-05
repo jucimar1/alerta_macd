@@ -3,12 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🎯 SOL Sniper PRO - Timeframes Invertidos</title>
+  <title>SOL Sniper PRO - GitHub Pages</title>
+  <!-- Font Awesome para ícones -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- Chart.js -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/chartjs-chart-financial"></script>
   <style>
     * {
       margin: 0;
@@ -16,40 +13,18 @@
       box-sizing: border-box;
     }
     
-    :root {
-      --primary: #58a6ff;
-      --success: #28a745;
-      --danger: #dc3545;
-      --warning: #ffc107;
-      --info: #17a2b8;
-      --dark-bg: #0d1117;
-      --card-bg: #161b22;
-      --border-color: #30363d;
-      --text-primary: #c9d1d9;
-      --text-secondary: #8b949e;
-      --support-color: #28a745;
-      --resistance-color: #dc3545;
-      --volume-color: #58a6ff;
-      --rsi-oversold: #28a745;
-      --rsi-overbought: #dc3545;
-      --rsi-neutral: #8b949e;
-      --macd-bullish: #28a745;
-      --macd-bearish: #dc3545;
-      --chart-bg: #0a0e14;
-      --grid-color: #222833;
-    }
-    
     body {
-      background: linear-gradient(135deg, var(--dark-bg) 0%, #111827 100%);
-      color: var(--text-primary);
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      line-height: 1.6;
+      background: linear-gradient(135deg, #0d1117 0%, #111827 100%);
+      color: #c9d1d9;
+      margin: 0;
       padding: 20px;
       min-height: 100vh;
+      transition: background 0.5s ease;
     }
     
     .container {
-      max-width: 1600px;
+      max-width: 1400px;
       margin: 0 auto;
     }
     
@@ -57,13 +32,12 @@
       text-align: center;
       padding: 30px 0;
       margin-bottom: 30px;
-      position: relative;
     }
     
     h1 {
       font-size: 3.5rem;
       margin-bottom: 15px;
-      background: linear-gradient(90deg, var(--primary), #8a6bff, var(--success), var(--info));
+      background: linear-gradient(90deg, #58a6ff, #8a6bff, #28a745, #17a2b8);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
@@ -73,7 +47,7 @@
     
     .subtitle {
       font-size: 1.4rem;
-      color: var(--text-secondary);
+      color: #8b949e;
       margin-top: 10px;
       max-width: 800px;
       margin-left: auto;
@@ -88,15 +62,16 @@
       display: inline-flex;
       align-items: center;
       margin: 25px auto;
-      border: 1px solid var(--border-color);
+      border: 1px solid #30363d;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+      animation: fadeIn 0.5s ease-out;
     }
     
     .status-indicator {
       display: inline-block;
       width: 14px;
       height: 14px;
-      background: var(--success);
+      background: #28a745;
       border-radius: 50%;
       margin-right: 10px;
       animation: pulse 2s infinite;
@@ -107,23 +82,29 @@
       70% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(40, 167, 69, 0); }
     }
     
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     .dashboard-grid {
       display: grid;
-      grid-template-columns: 320px repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
       gap: 25px;
       margin-bottom: 30px;
     }
     
     .card {
-      background: var(--card-bg);
+      background: #161b22;
       border-radius: 20px;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4),
                   0 0 30px rgba(88, 166, 255, 0.08);
       padding: 28px;
-      border: 1px solid var(--border-color);
+      border: 1px solid #30363d;
       transition: transform 0.3s ease, box-shadow 0.3s ease;
       position: relative;
       overflow: hidden;
+      animation: slideUp 0.6s ease-out forwards;
     }
     
     .card::before {
@@ -133,12 +114,8 @@
       left: 0;
       width: 100%;
       height: 5px;
-      background: linear-gradient(90deg, var(--primary), var(--success), var(--info));
+      background: linear-gradient(90deg, #58a6ff, #28a745, #17a2b8);
       opacity: 0.7;
-    }
-    
-    .card.macd-card::before {
-      background: linear-gradient(90deg, var(--info), #6c43f5, var(--primary));
     }
     
     .card:hover {
@@ -147,13 +124,18 @@
                   0 0 40px rgba(88, 166, 255, 0.15);
     }
     
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
     .card-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
       margin-bottom: 22px;
       padding-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
+      border-bottom: 1px solid #30363d;
     }
     
     .card-title {
@@ -173,18 +155,19 @@
       font-weight: 800;
       text-align: center;
       margin: 25px 0;
-      background: linear-gradient(90deg, var(--success), #34d399);
+      background: linear-gradient(90deg, #28a745, #34d399);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
       text-shadow: 0 0 15px rgba(40, 167, 69, 0.3);
       position: relative;
+      line-height: 1;
     }
     
     .price-display::after {
-      content: '$';
+      content: 'R$';
       position: absolute;
-      left: -25px;
+      left: -35px;
       top: 0;
       font-size: 0.6em;
       opacity: 0.7;
@@ -193,13 +176,13 @@
     .price-display small {
       font-size: 1.2rem;
       font-weight: 400;
-      color: var(--text-secondary);
+      color: #8b949e;
       margin-left: 8px;
     }
     
     .metric-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 18px;
       margin-top: 15px;
     }
@@ -218,68 +201,50 @@
     }
     
     .metric-label {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
+      font-size: 0.9rem;
+      color: #8b949e;
       margin-bottom: 8px;
       display: block;
-      line-height: 1.3;
     }
     
     .metric-value {
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       font-weight: 700;
       display: block;
     }
     
     .metric-badge {
       display: inline-block;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 6px;
+      font-weight: bold;
       margin-top: 8px;
+      font-size: 0.85rem;
     }
     
     .badge-support {
       background: rgba(40, 167, 69, 0.15);
-      color: var(--support-color);
-      border: 1px solid var(--support-color);
+      color: #28a745;
     }
     
     .badge-resistance {
       background: rgba(220, 53, 69, 0.15);
-      color: var(--resistance-color);
-      border: 1px solid var(--resistance-color);
+      color: #dc3545;
     }
     
     .badge-volume {
       background: rgba(88, 166, 255, 0.15);
-      color: var(--volume-color);
-      border: 1px solid var(--volume-color);
+      color: #58a6ff;
     }
     
     .badge-rsi {
       background: rgba(139, 92, 236, 0.15);
       color: #8b5cf6;
-      border: 1px solid #8b5cf6;
     }
     
     .badge-macd {
       background: rgba(23, 162, 184, 0.15);
-      color: var(--info);
-      border: 1px solid var(--info);
-    }
-    
-    .badge-macd.bullish {
-      background: rgba(40, 167, 69, 0.2);
-      color: var(--macd-bullish);
-      border-color: var(--macd-bullish);
-    }
-    
-    .badge-macd.bearish {
-      background: rgba(220, 53, 69, 0.2);
-      color: var(--macd-bearish);
-      border-color: var(--macd-bearish);
+      color: #17a2b8;
     }
     
     .alert-container {
@@ -302,131 +267,53 @@
     
     .alert-container.buy {
       background: rgba(40, 167, 69, 0.1);
-      border-color: var(--support-color);
-      color: var(--support-color);
+      border-color: #28a745;
+      color: #28a745;
       box-shadow: 0 0 25px rgba(40, 167, 69, 0.2);
     }
     
     .alert-container.sell {
       background: rgba(220, 53, 69, 0.1);
-      border-color: var(--resistance-color);
-      color: var(--resistance-color);
+      border-color: #dc3545;
+      color: #dc3545;
       box-shadow: 0 0 25px rgba(220, 53, 69, 0.2);
     }
     
     .alert-container.none {
       background: rgba(108, 117, 125, 0.1);
-      border-color: var(--text-secondary);
-      color: var(--text-secondary);
-    }
-    
-    .chart-container {
-      grid-column: 2 / -1;
-      background: var(--card-bg);
-      border-radius: 20px;
-      padding: 25px;
-      border: 1px solid var(--border-color);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
-      margin-top: 10px;
-    }
-    
-    .chart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 15px;
-      border-bottom: 1px solid var(--border-color);
-    }
-    
-    .chart-title {
-      font-size: 1.7rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .chart-tabs {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 20px;
-    }
-    
-    .chart-tab {
-      padding: 8px 16px;
-      border-radius: 12px;
-      background: rgba(30, 34, 40, 0.7);
-      border: none;
-      color: var(--text-secondary);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .chart-tab.active {
-      background: var(--primary);
-      color: white;
-      box-shadow: 0 4px 15px rgba(88, 166, 255, 0.4);
-    }
-    
-    .chart-wrapper {
-      position: relative;
-      height: 400px;
-      width: 100%;
-    }
-    
-    canvas {
-      max-height: 400px;
-    }
-    
-    .chart-legend {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      margin-top: 15px;
-      flex-wrap: wrap;
-    }
-    
-    .legend-item {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.9rem;
-    }
-    
-    .legend-color {
-      width: 16px;
-      height: 16px;
-      border-radius: 4px;
+      border-color: #8b949e;
+      color: #8b949e;
     }
     
     .footer {
       text-align: center;
       padding: 30px;
       margin-top: 20px;
-      border-top: 1px solid var(--border-color);
-      color: var(--text-secondary);
+      border-top: 1px solid #30363d;
+      color: #8b949e;
       font-size: 0.95rem;
     }
     
     .update-time {
       display: inline-block;
       background: rgba(88, 166, 255, 0.1);
-      color: var(--primary);
+      color: #58a6ff;
       padding: 5px 15px;
       border-radius: 20px;
       font-weight: 600;
       margin-top: 8px;
       font-size: 1.1rem;
+      min-width: 180px;
     }
     
     .config-panel {
-      background: var(--card-bg);
+      background: #161b22;
       border-radius: 20px;
       padding: 25px;
       margin: 25px 0;
-      border: 1px solid var(--border-color);
+      border: 1px solid #30363d;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      animation: fadeIn 0.7s ease-out;
     }
     
     .config-title {
@@ -439,7 +326,7 @@
     
     .config-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 20px;
       margin-top: 15px;
     }
@@ -451,33 +338,85 @@
     .config-label {
       display: block;
       margin-bottom: 8px;
-      color: var(--text-secondary);
+      color: #8b949e;
       font-size: 0.95rem;
     }
     
     .config-value {
       font-weight: 700;
-      color: var(--primary);
+      color: #58a6ff;
       font-size: 1.3rem;
     }
     
-    .loading {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 200px;
-      font-size: 1.5rem;
-      color: var(--text-secondary);
+    .strategy-info {
+      background: rgba(23, 162, 184, 0.1);
+      border-left: 4px solid #17a2b8;
+      padding: 25px;
+      border-radius: 0 12px 12px 0;
+      margin: 25px 0;
+      font-size: 0.98rem;
+      line-height: 1.7;
+      animation: fadeIn 0.8s ease-out;
     }
     
-    .loading-spinner {
-      border: 4px solid rgba(88, 166, 255, 0.2);
-      border-top: 4px solid var(--primary);
+    .strategy-info h3 {
+      color: #17a2b8;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 1.4rem;
+    }
+    
+    .strategy-info ul {
+      padding-left: 25px;
+      margin-top: 12px;
+      text-align: left;
+    }
+    
+    .strategy-info li {
+      margin-bottom: 8px;
+      position: relative;
+    }
+    
+    .strategy-info li:before {
+      content: '•';
+      color: #17a2b8;
+      font-weight: bold;
+      position: absolute;
+      left: -20px;
+    }
+    
+    .timeframe-badge {
+      display: inline-block;
+      background: rgba(139, 92, 236, 0.2);
+      color: #8b5cf6;
+      padding: 3px 12px;
+      border-radius: 15px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-left: 8px;
+      letter-spacing: 0.3px;
+    }
+    
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 80vh;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .spinner {
+      width: 60px;
+      height: 60px;
+      border: 5px solid rgba(88, 166, 255, 0.2);
+      border-top: 5px solid #58a6ff;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
       animation: spin 1s linear infinite;
-      margin-right: 15px;
+      margin-bottom: 25px;
     }
     
     @keyframes spin {
@@ -485,149 +424,109 @@
       100% { transform: rotate(360deg); }
     }
     
-    .error-message {
-      background: rgba(220, 53, 69, 0.1);
-      border-left: 4px solid var(--resistance-color);
-      padding: 15px;
-      border-radius: 0 8px 8px 0;
-      margin: 20px 0;
-      color: var(--text-primary);
-    }
-    
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: var(--card-bg);
-      border: 1px solid var(--border-color);
-      border-radius: 16px;
-      padding: 15px 25px;
-      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.5);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      z-index: 1000;
-      transform: translateX(400px);
-      transition: transform 0.3s ease;
-      animation: slideIn 0.3s forwards, slideOut 0.3s 2.7s forwards;
-    }
-    
-    @keyframes slideIn {
-      to { transform: translateX(0); }
-    }
-    
-    @keyframes slideOut {
-      to { transform: translateX(400px); }
-    }
-    
-    .notification i {
+    .loading-text {
       font-size: 1.8rem;
+      margin-bottom: 15px;
+      background: linear-gradient(90deg, #58a6ff, #8a6bff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
     
-    .notification.buy {
-      border-left: 4px solid var(--support-color);
-    }
-    
-    .notification.buy i {
-      color: var(--support-color);
-    }
-    
-    .notification.sell {
-      border-left: 4px solid var(--resistance-color);
-    }
-    
-    .notification.sell i {
-      color: var(--resistance-color);
-    }
-    
-    .strategy-info {
-      background: rgba(23, 162, 184, 0.1);
-      border-left: 4px solid var(--info);
+    .github-warning {
+      background: rgba(255, 193, 7, 0.15);
+      border: 1px solid #ffc107;
+      border-radius: 12px;
       padding: 20px;
-      border-radius: 0 12px 12px 0;
       margin: 25px 0;
-      font-size: 0.95rem;
+      text-align: center;
+      color: #ffc107;
+      font-size: 1.1rem;
       line-height: 1.6;
     }
     
-    .strategy-info h3 {
-      color: var(--info);
+    .github-warning strong {
+      display: block;
       margin-bottom: 10px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
+      font-size: 1.3rem;
     }
     
-    .strategy-info ul {
-      padding-left: 20px;
-      margin-top: 8px;
+    .github-warning code {
+      background: rgba(0,0,0,0.3);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-family: monospace;
     }
     
-    .strategy-info li {
-      margin-bottom: 5px;
+    .error-container {
+      background: rgba(220, 53, 69, 0.1);
+      border: 1px solid #dc3545;
+      border-radius: 16px;
+      padding: 40px;
+      text-align: center;
+      margin: 40px auto;
+      max-width: 800px;
+      animation: shake 0.5s;
     }
     
-    .timeframe-badge {
-      display: inline-block;
-      background: rgba(139, 92, 236, 0.2);
-      color: #8b5cf6;
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 0.85rem;
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    
+    .error-title {
+      font-size: 2.5rem;
+      color: #dc3545;
+      margin-bottom: 20px;
+    }
+    
+    .error-message {
+      font-size: 1.3rem;
+      margin-bottom: 25px;
+      color: #e0e0e0;
+    }
+    
+    .retry-btn {
+      background: #28a745;
+      color: white;
+      border: none;
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s;
       font-weight: 600;
-      margin-left: 8px;
+      letter-spacing: 0.5px;
     }
     
-    .db-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(40, 167, 69, 0.15);
-      color: var(--support-color);
-      padding: 2px 10px;
-      border-radius: 12px;
-      font-size: 0.85rem;
-      margin-left: 10px;
+    .retry-btn:hover {
+      background: #218838;
+      transform: scale(1.05);
     }
     
-    .signal-history {
-      margin-top: 25px;
-      max-height: 300px;
-      overflow-y: auto;
+    .last-update {
+      background: rgba(88, 166, 255, 0.1);
+      display: inline-block;
+      padding: 4px 15px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      margin-top: 10px;
+      color: #58a6ff;
     }
     
-    .history-item {
-      padding: 12px;
-      border-bottom: 1px solid var(--border-color);
-      display: flex;
-      justify-content: space-between;
+    .proxy-info {
+      background: rgba(102, 16, 242, 0.15);
+      border-left: 4px solid #6610f2;
+      padding: 15px;
+      margin: 20px 0;
+      border-radius: 0 8px 8px 0;
       font-size: 0.9rem;
     }
     
-    .history-item:last-child {
-      border-bottom: none;
-    }
-    
-    .history-time {
-      color: var(--text-secondary);
-      font-size: 0.85rem;
-    }
-    
-    .history-buy {
-      color: var(--support-color);
-    }
-    
-    .history-sell {
-      color: var(--resistance-color);
-    }
-    
-    @media (max-width: 1200px) {
+    @media (max-width: 1100px) {
       .dashboard-grid {
-        grid-template-columns: 1fr;
-      }
-      
-      .chart-container {
-        grid-column: 1 / -1;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
       }
     }
     
@@ -644,6 +543,10 @@
         font-size: 3.2rem;
       }
       
+      .dashboard-grid {
+        grid-template-columns: 1fr;
+      }
+      
       .metric-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -652,19 +555,18 @@
         padding: 22px;
       }
       
-      .notification {
-        top: 70px;
-        right: 15px;
-        width: calc(100% - 30px);
-        text-align: center;
+      .config-grid {
+        grid-template-columns: 1fr;
       }
       
-      .chart-wrapper {
-        height: 300px;
+      .strategy-info {
+        border-radius: 12px;
+        padding: 20px;
       }
       
-      canvas {
-        max-height: 300px;
+      .github-warning {
+        padding: 15px;
+        font-size: 1rem;
       }
     }
     
@@ -697,500 +599,122 @@
         padding: 18px;
       }
       
-      .config-grid {
-        grid-template-columns: 1fr;
-      }
-      
       .strategy-info {
         padding: 15px;
       }
       
-      .chart-wrapper {
-        height: 250px;
+      .strategy-info ul {
+        padding-left: 20px;
       }
       
-      canvas {
-        max-height: 250px;
+      .loading-text {
+        font-size: 1.5rem;
+      }
+      
+      .spinner {
+        width: 50px;
+        height: 50px;
       }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <header>
-      <h1><i class="fas fa-crosshairs"></i> SOL Sniper PRO <span class="timeframe-badge">Timeframes Invertidos</span></h1>
-      <div class="subtitle">
-        Sistema avançado com análise invertida: Contexto 5m + Timing 1h (análise de curto prazo com timing de longo prazo)
+    <div class="loading-container" id="loadingScreen">
+      <div class="spinner"></div>
+      <div class="loading-text">Carregando dados da Binance...</div>
+      <div class="github-warning">
+        <strong>🚀 GitHub Pages - Configuração Automática</strong><br>
+        Este dashboard está configurado para funcionar no GitHub Pages!<br>
+        Usando proxy CORS para acessar a API da Binance.<br>
+        <small style="display: block; margin-top: 10px; opacity: 0.8;">
+          Atualizações a cada 60 segundos • Dados em tempo real
+        </small>
       </div>
-      
-      <div class="status-bar">
-        <span class="status-indicator"></span>
-        <span><strong>Conectado à Binance API</strong> • Atualizando a cada 60 segundos <span class="db-status"><i class="fas fa-database"></i> IndexedDB</span></span>
-      </div>
-      
-      <div class="strategy-info">
-        <h3><i class="fas fa-brain"></i> Estratégia de Trading com Timeframes Invertidos</h3>
-        <p>Esta configuração inverte a lógica tradicional de análise técnica:</p>
-        <ul>
-          <li><strong>⏱️ Contexto 5m:</strong> Análise de curto prazo para identificar tendências imediatas (RSI, Suporte/Resistência, Volume)</li>
-          <li><strong>🕗 Timing 1h:</strong> Confirmação de timing de entrada/saída usando MACD e análise de longo prazo</li>
-          <li><strong>🎯 Sinal de COMPRA:</strong> Tendência de alta no timeframe 5m + Confirmação MACD 1h (crossover de alta)</li>
-          <li><strong>🎯 Sinal de VENDA:</strong> Tendência de baixa no timeframe 5m + Confirmação MACD 1h (crossover de baixa)</li>
-          <li><strong>🔄 Benefício:</strong> Ideal para traders de curto prazo que buscam entradas rápidas com confirmação de longo prazo</li>
-        </ul>
-      </div>
-    </header>
-    
-    <div class="config-panel">
-      <div class="config-title">
-        <i class="fas fa-cog"></i> Configuração do Sistema
-      </div>
-      <div class="config-grid">
-        <div class="config-item">
-          <span class="config-label">Par Monitorado</span>
-          <div class="config-value">SOL/USDT</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Contexto (TF)</span>
-          <div class="config-value">5m</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Timing (TF)</span>
-          <div class="config-value">1h <span class="timeframe-badge">MACD</span></div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Período RSI</span>
-          <div class="config-value">14 velas</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">MACD Parameters</span>
-          <div class="config-value">(12, 26, 9)</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Tolerância S/R</span>
-          <div class="config-value">1.2%</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Threshold Volume</span>
-          <div class="config-value">1.5x média</div>
-        </div>
-        <div class="config-item">
-          <span class="config-label">Última Atualização</span>
-          <div class="config-value" id="last-update">Carregando...</div>
-        </div>
+      <div class="proxy-info">
+        <i class="fas fa-shield-alt"></i> Proxy CORS: api.allorigins.win (público gratuito)
       </div>
     </div>
     
-    <div class="dashboard-grid">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fas fa-coins"></i> Preço Atual
-          </div>
-          <div>
-            <span class="metric-badge badge-rsi">SOL/USDT</span>
-          </div>
-        </div>
-        <div class="price-display" id="current-price">
-          <div class="loading">
-            <div class="loading-spinner"></div>
-            <span>Carregando preço...</span>
-          </div>
-        </div>
-        <div class="alert-container none" id="alert-box">
-          Aguardando análise de mercado...
-        </div>
-        
-        <div class="signal-history">
-          <div style="font-weight: 600; margin-bottom: 15px; display: flex; justify-content: space-between;">
-            <span><i class="fas fa-history"></i> Histórico de Sinais</span>
-            <span class="metric-badge badge-rsi" id="signals-count">0 sinais</span>
-          </div>
-          <div id="history-list">
-            <div class="history-item">
-              <span>Nenhum sinal registrado ainda</span>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fas fa-chart-line"></i> Indicadores 5m
-          </div>
-        </div>
-        <div class="metric-grid">
-          <div class="metric-item">
-            <span class="metric-label">RSI (14)</span>
-            <span class="metric-value" id="rsi-value">--</span>
-            <span class="metric-badge badge-rsi" id="rsi-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Volume</span>
-            <span class="metric-value" id="volume-ratio">--</span>
-            <span class="metric-badge badge-volume" id="volume-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">5m Alta</span>
-            <span class="metric-value" id="high-5m">--</span>
-            <span class="metric-badge badge-resistance">Resistência</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">5m Baixa</span>
-            <span class="metric-value" id="low-5m">--</span>
-            <span class="metric-badge badge-support">Suporte</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fas fa-bullseye"></i> Análise 5m
-          </div>
-        </div>
-        <div class="metric-grid">
-          <div class="metric-item">
-            <span class="metric-label">Dist. Suporte</span>
-            <span class="metric-value" id="dist-support">--</span>
-            <span class="metric-badge badge-support" id="support-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Dist. Resistência</span>
-            <span class="metric-value" id="dist-resistance">--</span>
-            <span class="metric-badge badge-resistance" id="resistance-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Sinal 5m</span>
-            <span class="metric-value" id="current-signal">--</span>
-            <span class="metric-badge" id="signal-badge">Aguardando</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Força Sinal</span>
-            <span class="metric-value" id="signal-strength">--</span>
-            <span class="metric-badge" id="strength-badge">--</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="card macd-card">
-        <div class="card-header">
-          <div class="card-title">
-            <i class="fas fa-stopwatch"></i> Timing 1h (MACD)
-          </div>
-        </div>
-        <div class="metric-grid">
-          <div class="metric-item">
-            <span class="metric-label">MACD</span>
-            <span class="metric-value" id="macd-value">--</span>
-            <span class="metric-badge badge-macd" id="macd-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Signal Line</span>
-            <span class="metric-value" id="signal-line-value">--</span>
-            <span class="metric-badge badge-macd">9-período</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Histograma</span>
-            <span class="metric-value" id="histogram-value">--</span>
-            <span class="metric-badge badge-macd" id="histogram-status">Carregando...</span>
-          </div>
-          <div class="metric-item">
-            <span class="metric-label">Crossover</span>
-            <span class="metric-value" id="crossover-type">--</span>
-            <span class="metric-badge badge-macd" id="crossover-status">Aguardando</span>
-          </div>
-        </div>
-      </div>
-      
-      <div class="chart-container">
-        <div class="chart-header">
-          <div class="chart-title">
-            <i class="fas fa-chart-candlestick"></i> Gráficos Interativos
-          </div>
-          <div>
-            <span class="metric-badge badge-rsi">Binance API</span>
-          </div>
-        </div>
-        
-        <div class="chart-tabs">
-          <button class="chart-tab active" data-tab="5m">⏱️ Gráfico 5m (Contexto)</button>
-          <button class="chart-tab" data-tab="1h">.getHours Gráfico 1h (Timing)</button>
-          <button class="chart-tab" data-tab="macd">📊 MACD 1h</button>
-        </div>
-        
-        <div class="chart-wrapper">
-          <canvas id="main-chart"></canvas>
-        </div>
-        
-        <div class="chart-legend" id="chart-legend">
-          <!-- Legend will be generated dynamically -->
-        </div>
-      </div>
-    </div>
-    
-    <div class="footer">
-      <p><i class="fas fa-robot"></i> SOL Sniper PRO v5.0 • Timeframes Invertidos</p>
-      <p>Fonte de dados: Binance API • Atualização automática a cada 60 segundos</p>
-      <div class="update-time" id="next-update">Próxima atualização em: 60s</div>
-      <p style="margin-top: 12px; font-size: 0.9rem; opacity: 0.7;">
-        <i class="fas fa-exclamation-triangle"></i> Este sistema é para fins educacionais. Opere com responsabilidade e sempre use stop loss.
-      </p>
+    <div id="dashboardContent" style="display: none;">
+      <!-- Conteúdo do dashboard será inserido aqui via JS -->
     </div>
   </div>
-  
-  <div class="notification buy" id="notification" style="display: none;">
-    <i class="fas fa-arrow-up"></i>
-    <div>
-      <div style="font-weight: 700; font-size: 1.1rem;">SINAL DE COMPRA</div>
-      <div id="notification-message">Tendência de alta no 5m com confirmação MACD 1h</div>
-    </div>
-  </div>
-  
+
   <script>
-    // Configurações do sistema com timeframes invertidos
+    /**
+     * SOL Sniper PRO - Versão GitHub Pages
+     * Sistema de Trading com Timeframes Invertidos
+     * 
+     * ✅ Funciona 100% no GitHub Pages
+     * ✅ Usa proxy CORS público para contornar restrições
+     * ✅ Cache automático para offline
+     * ✅ Atualização automática a cada 60 segundos
+     */
+
+    // Configurações do sistema
     const CONFIG = {
       SYMBOL: 'SOLUSDT',
-      INTERVAL_5M: '5m',  // Contexto de curto prazo
-      INTERVAL_1H: '1h', // Timing de longo prazo
+      INTERVAL_5M: '5m',
+      INTERVAL_1H: '1h',
       RSI_PERIOD: 14,
       MACD_FAST: 12,
       MACD_SLOW: 26,
       MACD_SIGNAL: 9,
-      TOLERANCE: 1.2, // 1.2%
-      VOLUME_THRESHOLD: 1.5, // 1.5x média
-      UPDATE_INTERVAL: 60000, // 60 segundos
-      CANDLES_LIMIT_5M: 100,  // Para análise de curto prazo
-      CANDLES_LIMIT_1H: 100,  // Para análise de longo prazo
-      DB_NAME: 'sol_sniper_inverted_db',
-      DB_VERSION: 1
+      TOLERANCE: 1.2,
+      VOLUME_THRESHOLD: 1.5,
+      UPDATE_INTERVAL: 60000,
+      CANDLES_LIMIT_5M: 100,
+      CANDLES_LIMIT_1H: 100,
+      DB_NAME: 'sol_sniper_github_pages',
+      // Proxy CORS para GitHub Pages
+      CORS_PROXY: 'https://api.allorigins.win/raw?url='
     };
-    
-    // Estado da aplicação
-    let lastUpdate = null;
-    let nextUpdateTimer = null;
-    let countdownInterval = null;
-    let chart = null;
-    let currentTab = '5m';
-    let signalHistory = [];
-    let priceHistory = [];
-    let db = null;
-    
-    // Inicializar banco de dados IndexedDB
-    function initDatabase() {
-      return new Promise((resolve, reject) => {
-        const request = indexedDB.open(CONFIG.DB_NAME, CONFIG.DB_VERSION);
-        
-        request.onerror = (event) => {
-          console.error('Erro ao abrir banco de dados:', event.target.error);
-          reject(event.target.error);
-        };
-        
-        request.onsuccess = (event) => {
-          db = event.target.result;
-          console.log('Banco de dados aberto com sucesso');
-          loadHistory().then(resolve).catch(reject);
-        };
-        
-        request.onupgradeneeded = (event) => {
-          db = event.target.result;
-          
-          // Criar armazenamento para preços
-          if (!db.objectStoreNames.contains('prices')) {
-            const priceStore = db.createObjectStore('prices', { 
-              keyPath: 'id',
-              autoIncrement: true
-            });
-            priceStore.createIndex('timestamp', 'timestamp', { unique: false });
-          }
-          
-          // Criar armazenamento para sinais
-          if (!db.objectStoreNames.contains('signals')) {
-            const signalStore = db.createObjectStore('signals', {
-              keyPath: 'id',
-              autoIncrement: true
-            });
-            signalStore.createIndex('timestamp', 'timestamp', { unique: false });
-          }
-          
-          console.log('Banco de dados criado/atualizado');
-        };
-      });
-    }
-    
-    // Carregar histórico do banco de dados
-    async function loadHistory() {
-      return new Promise((resolve, reject) => {
-        if (!db) {
-          signalHistory = [];
-          priceHistory = [];
-          resolve();
-          return;
-        }
-        
-        const tx = db.transaction(['signals', 'prices'], 'readonly');
-        const signalsStore = tx.objectStore('signals');
-        const pricesStore = tx.objectStore('prices');
-        
-        // Carregar sinais
-        const signalsRequest = signalsStore.index('timestamp').openCursor(null, 'prev');
-        signalHistory = [];
-        signalsRequest.onsuccess = (event) => {
-          const cursor = event.target.result;
-          if (cursor) {
-            signalHistory.push(cursor.value);
-            if (signalHistory.length < 50) { // Limitar a 50 sinais
-              cursor.continue();
-            } else {
-              cursor.advance(signalHistory.length); // Pular o resto
-            }
-          } else {
-            // Carregar preços
-            const pricesRequest = pricesStore.index('timestamp').openCursor(null, 'prev');
-            priceHistory = [];
-            pricesRequest.onsuccess = (event) => {
-              const cursor = event.target.result;
-              if (cursor) {
-                priceHistory.push(cursor.value);
-                if (priceHistory.length < 1000) { // Limitar a 1000 preços
-                  cursor.continue();
-                } else {
-                  cursor.advance(priceHistory.length);
-                }
-              } else {
-                console.log(`Carregado ${signalHistory.length} sinais e ${priceHistory.length} preços do banco de dados`);
-                document.getElementById('signals-count').textContent = `${signalHistory.length} sinais`;
-                renderSignalHistory();
-                resolve();
-              }
-            };
-            pricesRequest.onerror = reject;
-          }
-        };
-        signalsRequest.onerror = reject;
-      });
-    }
-    
-    // Salvar sinal no banco de dados
-    function saveSignal(signalData) {
-      if (!db) return;
-      
-      const signal = {
-        timestamp: new Date().toISOString(),
-        price: signalData.price,
-        signal: signalData.signal,
-        strength: signalData.strength,
-        rsi: signalData.rsi,
-        macd: signalData.macd,
-        type: signalData.signalType
-      };
-      
-      const tx = db.transaction('signals', 'readwrite');
-      const store = tx.objectStore('signals');
-      store.add(signal);
-      
-      tx.oncomplete = () => {
-        signalHistory.unshift(signal);
-        if (signalHistory.length > 50) {
-          signalHistory = signalHistory.slice(0, 50);
-        }
-        document.getElementById('signals-count').textContent = `${signalHistory.length} sinais`;
-        renderSignalHistory();
-        console.log('Sinal salvo no banco de dados');
-      };
-      
-      tx.onerror = (event) => {
-        console.error('Erro ao salvar sinal:', event.target.error);
-      };
-    }
-    
-    // Salvar preço no banco de dados
-    function savePrice(price) {
-      if (!db) return;
-      
-      const priceEntry = {
-        timestamp: new Date().toISOString(),
-        price: price
-      };
-      
-      const tx = db.transaction('prices', 'readwrite');
-      const store = tx.objectStore('prices');
-      store.add(priceEntry);
-      
-      tx.oncomplete = () => {
-        priceHistory.unshift(priceEntry);
-        if (priceHistory.length > 1000) {
-          priceHistory = priceHistory.slice(0, 1000);
-        }
-        console.log('Preço salvo no banco de dados');
-      };
-      
-      tx.onerror = (event) => {
-        console.error('Erro ao salvar preço:', event.target.error);
-      };
-    }
-    
-    // Renderizar histórico de sinais
-    function renderSignalHistory() {
-      const historyList = document.getElementById('history-list');
-      
-      if (signalHistory.length === 0) {
-        historyList.innerHTML = `
-          <div class="history-item">
-            <span>Nenhum sinal registrado ainda</span>
-          </div>
-        `;
-        return;
-      }
-      
-      historyList.innerHTML = signalHistory.map(signal => {
-        const time = new Date(signal.timestamp).toLocaleTimeString('pt-BR');
-        const date = new Date(signal.timestamp).toLocaleDateString('pt-BR');
-        const signalClass = signal.type === 'buy' ? 'history-buy' : 'history-sell';
-        const signalIcon = signal.type === 'buy' ? '<i class="fas fa-arrow-up"></i>' : '<i class="fas fa-arrow-down"></i>';
-        
-        return `
-          <div class="history-item">
-            <div>
-              <span class="${signalClass}">${signalIcon} ${signal.signal} (${signal.strength})</span>
-              <div class="history-time">${date} ${time}</div>
-            </div>
-            <div>
-              <span>$${signal.price.toFixed(2)}</span>
-              <div class="history-time">RSI: ${signal.rsi.toFixed(1)} | MACD: ${signal.macd.toFixed(4)}</div>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-    
-    // Função para buscar dados da Binance
-    async function fetchCandles(symbol, interval, limit) {
+
+    // Banco de dados local (localStorage)
+    let db = {
+      prices: [],
+      signals: [],
+      lastSuccessfulData: null
+    };
+
+    // Carregar dados do localStorage
+    function loadDb() {
       try {
-        const url = `https://api.binance.com/api/v3/klines?symbol=${symbol}&interval=${interval}&limit=${limit}`;
-        const response = await fetch(url);
+        const savedPrices = localStorage.getItem(`${CONFIG.DB_NAME}_prices`);
+        const savedSignals = localStorage.getItem(`${CONFIG.DB_NAME}_signals`);
+        const savedLastData = localStorage.getItem(`${CONFIG.DB_NAME}_lastData`);
         
-        if (!response.ok) {
-          throw new Error(`Erro na API Binance: ${response.status}`);
-        }
-        
-        const data = await response.json();
-        return data.map(candle => ({
-          timestamp: candle[0],
-          open: parseFloat(candle[1]),
-          high: parseFloat(candle[2]),
-          low: parseFloat(candle[3]),
-          close: parseFloat(candle[4]),
-          volume: parseFloat(candle[5])
-        }));
-      } catch (error) {
-        console.error('Erro ao buscar candles:', error);
-        showError(`Falha ao buscar dados da Binance: ${error.message}`);
-        return null;
+        if (savedPrices) db.prices = JSON.parse(savedPrices);
+        if (savedSignals) db.signals = JSON.parse(savedSignals);
+        if (savedLastData) db.lastSuccessfulData = JSON.parse(savedLastData);
+      } catch (e) {
+        console.error('Erro ao carregar banco de dados:', e);
+        db = { prices: [], signals: [], lastSuccessfulData: null };
       }
     }
-    
+
+    // Salvar dados no localStorage
+    function saveDb() {
+      try {
+        localStorage.setItem(`${CONFIG.DB_NAME}_prices`, JSON.stringify(db.prices));
+        localStorage.setItem(`${CONFIG.DB_NAME}_signals`, JSON.stringify(db.signals));
+        if (db.lastSuccessfulData) {
+          localStorage.setItem(`${CONFIG.DB_NAME}_lastData`, JSON.stringify(db.lastSuccessfulData));
+        }
+      } catch (e) {
+        console.error('Erro ao salvar banco de dados:', e);
+      }
+    }
+
+    // Formatar número com vírgula (padrão brasileiro)
+    function formatBR(number, decimals = 2) {
+      return number.toLocaleString('pt-BR', { 
+        minimumFractionDigits: decimals, 
+        maximumFractionDigits: decimals 
+      });
+    }
+
     // Calcular RSI
     function calculateRSI(candles, period = 14) {
       if (candles.length < period + 1) return 50;
@@ -1212,11 +736,11 @@
       const rs = avgGain / avgLoss;
       return 100 - (100 / (1 + rs));
     }
-    
+
     // Calcular suporte e resistência
-    function calculateSupportResistance(candles, period = 12) { // 12 velas de 5m = 1h
+    function calculateSupportResistance(candles, period = 12) {
       if (candles.length < period) {
-        return { support: 0, resistance: 0, distanceToSupport: 0, distanceToResistance: 0 };
+        return { support: 0, resistance: 0, distanceToSupport: 0, distanceToResistance: 0, currentPrice: 0 };
       }
       
       const recentCandles = candles.slice(-period);
@@ -1235,9 +759,9 @@
         currentPrice
       };
     }
-    
+
     // Analisar volume
-    function analyzeVolume(candles, period = 12) { // 12 velas de 5m = 1h
+    function analyzeVolume(candles, period = 12) {
       if (candles.length < period) {
         return { currentVolume: 0, avgVolume: 0, ratio: 1, status: 'unknown' };
       }
@@ -1256,15 +780,14 @@
       
       return { currentVolume, avgVolume, ratio, status };
     }
-    
-    // Calcular EMA (Exponential Moving Average)
+
+    // Calcular EMA
     function calculateEMA(candles, period) {
       if (candles.length < period) return [];
       
       const k = 2 / (period + 1);
       const ema = [];
       
-      // SMA inicial
       let sum = 0;
       for (let i = 0; i < period; i++) {
         sum += candles[i].close;
@@ -1272,7 +795,6 @@
       let sma = sum / period;
       ema.push(sma);
       
-      // Calcular EMA para os candles restantes
       for (let i = period; i < candles.length; i++) {
         const currentClose = candles[i].close;
         const previousEMA = ema[ema.length - 1];
@@ -1282,18 +804,16 @@
       
       return ema;
     }
-    
+
     // Calcular MACD
     function calculateMACD(candles, fastPeriod = 12, slowPeriod = 26, signalPeriod = 9) {
       if (candles.length < slowPeriod + signalPeriod) {
         return { macdLine: [], signalLine: [], histogram: [] };
       }
       
-      // Calcular EMAs
       const fastEMA = calculateEMA(candles, fastPeriod);
       const slowEMA = calculateEMA(candles, slowPeriod);
       
-      // Calcular MACD Line (apenas para candles onde ambas as EMAs existem)
       const macdLine = [];
       const startIndex = slowPeriod - fastPeriod;
       
@@ -1301,13 +821,11 @@
         macdLine.push(fastEMA[i] - slowEMA[i - startIndex]);
       }
       
-      // Calcular Signal Line (EMA do MACD Line)
       const signalLine = calculateEMA(
         macdLine.map((value, index) => ({ close: value })),
         signalPeriod
       );
       
-      // Calcular Histograma
       const histogram = [];
       const signalStartIndex = signalPeriod - 1;
       
@@ -1323,8 +841,8 @@
         slowEMA
       };
     }
-    
-    // Analisar MACD para timing
+
+    // Analisar MACD
     function analyzeMACD(macdData) {
       if (!macdData || macdData.histogram.length < 2) {
         return {
@@ -1341,28 +859,23 @@
       const signalLine = macdData.signalLine;
       const histogram = macdData.histogram;
       
-      // Pegar os últimos valores
       const currentMACD = macdLine[macdLine.length - 1];
       const currentSignal = signalLine[signalLine.length - 1];
       const currentHistogram = histogram[histogram.length - 1];
       const previousHistogram = histogram[histogram.length - 2];
       
-      // Determinar crossover
       let crossover = 'none';
       let signal = 'neutral';
-      let strength = Math.abs(currentHistogram) * 100; // Força baseada no histograma
+      let strength = Math.abs(currentHistogram) * 100;
       
-      // Crossover de alta (bullish)
       if (previousHistogram < 0 && currentHistogram >= 0) {
         crossover = 'bullish';
         signal = 'bullish';
       } 
-      // Crossover de baixa (bearish)
       else if (previousHistogram > 0 && currentHistogram <= 0) {
         crossover = 'bearish';
         signal = 'bearish';
       }
-      // Nenhum crossover, mas ainda em território
       else if (currentHistogram > 0) {
         signal = 'bullish';
       } else if (currentHistogram < 0) {
@@ -1375,20 +888,18 @@
         histogramValue: currentHistogram,
         crossover,
         signal,
-        strength: Math.min(Math.round(strength), 100) // Limitar a 100
+        strength: Math.min(Math.round(strength), 100)
       };
     }
-    
-    // Verificar sinais com timeframes invertidos
+
+    // Verificar sinais
     function checkSignals(price, rsi, sr, volume, macdAnalysis) {
-      // Análise de curto prazo (5m) - tendências imediatas
       const rsiOversold = rsi < 30;
       const rsiOverbought = rsi > 70;
       const nearSupport = sr.distanceToSupport <= CONFIG.TOLERANCE;
       const nearResistance = sr.distanceToResistance <= CONFIG.TOLERANCE;
       const highVolume = volume.ratio >= CONFIG.VOLUME_THRESHOLD;
       
-      // MACD de longo prazo (1h) - confirmação de timing
       const macdBullish = macdAnalysis.signal === 'bullish' || macdAnalysis.crossover === 'bullish';
       const macdBearish = macdAnalysis.signal === 'bearish' || macdAnalysis.crossover === 'bearish';
       
@@ -1399,33 +910,31 @@
       let message = '';
       let macdConfirmation = false;
       
-      // Sinal de compra: Tendência de alta no 5m + Confirmação MACD 1h
+      // Sinal de compra
       if ((nearSupport || rsiOversold) && macdBullish) {
         signal = 'COMPRA';
         signalType = 'buy';
         strengthLevel = (nearSupport ? 1 : 0) + (rsiOversold ? 1 : 0) + (highVolume ? 1 : 0) + (macdBullish ? 1 : 0);
         macdConfirmation = true;
         
-        // Mensagem detalhada
         message = `Tendência de alta no 5m `;
         if (nearSupport) message += `com suporte próximo `;
         if (rsiOversold) message += `${nearSupport ? 'e ' : ''}RSI sobrevendido `;
         if (macdBullish) message += `${(nearSupport || rsiOversold) ? 'com ' : ''}confirmação MACD 1h`;
       } 
-      // Sinal de venda: Tendência de baixa no 5m + Confirmação MACD 1h
+      // Sinal de venda
       else if ((nearResistance || rsiOverbought) && macdBearish) {
         signal = 'VENDA';
         signalType = 'sell';
         strengthLevel = (nearResistance ? 1 : 0) + (rsiOverbought ? 1 : 0) + (highVolume ? 1 : 0) + (macdBearish ? 1 : 0);
         macdConfirmation = true;
         
-        // Mensagem detalhada
         message = `Tendência de baixa no 5m `;
         if (nearResistance) message += `com resistência próxima `;
         if (rsiOverbought) message += `${nearResistance ? 'e ' : ''}RSI sobrecomprado `;
         if (macdBearish) message += `${(nearResistance || rsiOverbought) ? 'com ' : ''}confirmação MACD 1h`;
       }
-      // Sinal fraco sem confirmação MACD
+      // Sinal fraco
       else if (nearSupport || rsiOversold) {
         signal = 'COMPRA FRACA';
         signalType = 'buy';
@@ -1439,7 +948,6 @@
         message = `Tendência de baixa no 5m (aguardar confirmação MACD 1h)`;
       }
       
-      // Determinar força do sinal
       if (strengthLevel >= 3 && macdConfirmation) {
         strength = 'ALTA';
       } else if (strengthLevel >= 2) {
@@ -1466,600 +974,446 @@
         macd: macdAnalysis.macdValue
       };
     }
-    
-    // Formatar moeda
-    function formatCurrency(value) {
-      return value.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    }
-    
-    // Formatar número com sinal
-    function formatNumberWithSign(value, decimals = 2) {
-      const formatted = Math.abs(value).toFixed(decimals);
-      return `${value >= 0 ? '+' : '-'}${formatted}`;
-    }
-    
-    // Formatar tempo
-    function formatTime(date) {
-      return new Date(date).toLocaleString('pt-BR', {
+
+    // Gerar HTML do dashboard
+    function generateDashboard(data) {
+      const {
+        price,
+        rsi,
+        sr,
+        volume,
+        macdAnalysis,
+        signals,
+        timestamp
+      } = data;
+      
+      const rsiStatus = rsi < 30 ? 'Sobrevendido (COMPRA)' : (rsi > 70 ? 'Sobrecomprado (VENDA)' : 'Neutro');
+      const rsiColor = rsi < 30 ? '#28a745' : (rsi > 70 ? '#dc3545' : '#8b949e');
+      const volStatus = volume.ratio >= 1.5 ? 'Alto' : 'Normal';
+      const volColor = volume.ratio >= 1.5 ? '#ff9800' : '#8b949e';
+      const distSupColor = sr.distanceToSupport <= 1.2 ? '#28a745' : '#8b949e';
+      const distResColor = sr.distanceToResistance <= 1.2 ? '#dc3545' : '#8b949e';
+      
+      const timestampBR = new Date(timestamp).toLocaleString('pt-BR', { 
         timeZone: 'America/Sao_Paulo',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        day: '2-digit',
-        month: '2-digit',
-        year: 'numeric'
+        hour12: false 
       });
-    }
-    
-    // Mostrar erro
-    function showError(message) {
-      const alertBox = document.getElementById('alert-box');
-      alertBox.className = 'alert-container sell';
-      alertBox.innerHTML = `<i class="fas fa-exclamation-triangle"></i> ${message}`;
-    }
-    
-    // Mostrar notificação
-    function showNotification(message, type = 'buy') {
-      const notification = document.getElementById('notification');
-      notification.className = `notification ${type}`;
-      document.getElementById('notification-message').textContent = message;
-      notification.style.display = 'flex';
       
-      // Esconder após 3 segundos
-      setTimeout(() => {
-        notification.style.display = 'none';
-      }, 3000);
-    }
-    
-    // Criar gráfico de candles
-    function createCandlestickChart(canvasId, candles, title, macdData = null) {
-      const ctx = document.getElementById(canvasId).getContext('2d');
-      
-      // Formatar dados para o gráfico
-      const chartData = candles.map(candle => ({
-        x: candle.timestamp,
-        o: candle.open,
-        h: candle.high,
-        l: candle.low,
-        c: candle.close
-      }));
-      
-      // Destruir gráfico anterior se existir
-      if (chart) {
-        chart.destroy();
-      }
-      
-      // Configurar legend
-      const legendItems = [
-        { color: 'rgba(40, 167, 69, 0.8)', label: 'Alta (Bullish)' },
-        { color: 'rgba(220, 53, 69, 0.8)', label: 'Baixa (Bearish)' }
-      ];
-      
-      // Se for gráfico MACD, adicionar legendas específicas
-      if (macdData) {
-        legendItems.push(
-          { color: 'rgba(52, 152, 219, 0.8)', label: 'MACD Line' },
-          { color: 'rgba(231, 76, 60, 0.8)', label: 'Signal Line' },
-          { color: 'rgba(142, 68, 173, 0.8)', label: 'Histograma' }
-        );
-      }
-      
-      // Renderizar legend
-      const legendContainer = document.getElementById('chart-legend');
-      legendContainer.innerHTML = legendItems.map(item => `
-        <div class="legend-item">
-          <div class="legend-color" style="background-color: ${item.color}"></div>
-          <span>${item.label}</span>
-        </div>
-      `).join('');
-      
-      // Configurar gráfico
-      if (!macdData) {
-        // Gráfico de candles simples
-        chart = new Chart(ctx, {
-          type: 'candlestick',
-           {
-            datasets: [{
-              label: title,
-               chartData,
-              borderColor: function(context) {
-                const candle = context.raw;
-                return candle.c >= candle.o ? 
-                  'rgba(40, 167, 69, 0.8)' : // Verde para alta
-                  'rgba(220, 53, 69, 0.8)'; // Vermelho para baixa
-              },
-              backgroundColor: function(context) {
-                const candle = context.raw;
-                return candle.c >= candle.o ? 
-                  'rgba(40, 167, 69, 0.2)' : // Verde claro para alta
-                  'rgba(220, 53, 69, 0.2)'; // Vermelho claro para baixa
-              },
-              borderWidth: 1,
-              hoverBorderColor: 'white'
-            }]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                mode: 'index',
-                intersect: false,
-                callbacks: {
-                  label: function(context) {
-                    const candle = context.raw;
-                    return [
-                      `Abertura: $${candle.o.toFixed(2)}`,
-                      `Máxima: $${candle.h.toFixed(2)}`,
-                      `Mínima: $${candle.l.toFixed(2)}`,
-                      `Fechamento: $${candle.c.toFixed(2)}`
-                    ];
-                  }
-                }
-              }
-            },
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'minute',
-                  displayFormats: {
-                    minute: 'HH:mm'
-                  }
-                },
-                grid: {
-                  color: 'rgba(34, 40, 51, 0.5)'
-                },
-                ticks: {
-                  color: '#8b949e'
-                }
-              },
-              y: {
-                grid: {
-                  color: 'rgba(34, 40, 51, 0.5)'
-                },
-                ticks: {
-                  color: '#8b949e'
-                }
-              }
-            }
-          }
-        });
-      } else {
-        // Gráfico MACD - combinação de linhas e barras
-        const macdLineData = macdData.macdLine.map((value, index) => ({
-          x: candles[index + 26].timestamp, // Ajustar pelo período lento
-          y: value
-        }));
-        
-        const signalLineData = macdData.signalLine.map((value, index) => ({
-          x: candles[index + 34].timestamp, // Ajustar pelo período lento + sinal
-          y: value
-        }));
-        
-        const histogramData = macdData.histogram.map((value, index) => ({
-          x: candles[index + 34].timestamp,
-          y: value
-        }));
-        
-        chart = new Chart(ctx, {
-          type: 'bar',
-          data: {
-            datasets: [
-              {
-                type: 'line',
-                label: 'MACD Line',
-                data: macdLineData,
-                borderColor: 'rgba(52, 152, 219, 0.8)',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                pointRadius: 0,
-                fill: false
-              },
-              {
-                type: 'line',
-                label: 'Signal Line',
-                 signalLineData,
-                borderColor: 'rgba(231, 76, 60, 0.8)',
-                backgroundColor: 'transparent',
-                borderWidth: 2,
-                pointRadius: 0,
-                fill: false
-              },
-              {
-                type: 'bar',
-                label: 'Histograma',
-                 histogramData,
-                backgroundColor: function(context) {
-                  const value = context.raw.y;
-                  return value >= 0 ? 
-                    'rgba(40, 167, 69, 0.6)' : // Verde para positivo
-                    'rgba(220, 53, 69, 0.6)'; // Vermelho para negativo
-                },
-                borderWidth: 0
-              }
-            ]
-          },
-          options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-              legend: {
-                display: false
-              },
-              tooltip: {
-                mode: 'index',
-                intersect: false
-              }
-            },
-            scales: {
-              x: {
-                type: 'time',
-                time: {
-                  unit: 'hour',
-                  displayFormats: {
-                    hour: 'HH:mm'
-                  }
-                },
-                grid: {
-                  color: 'rgba(34, 40, 51, 0.5)'
-                },
-                ticks: {
-                  color: '#8b949e'
-                }
-              },
-              y: {
-                grid: {
-                  color: 'rgba(34, 40, 51, 0.5)'
-                },
-                ticks: {
-                  color: '#8b949e'
-                }
-              }
-            }
-          }
-        });
-      }
-    }
-    
-    // Atualizar dashboard com timeframes invertidos
-    async function updateDashboard() {
-      try {
-        // Mostrar loading
-        document.getElementById('current-price').innerHTML = `
-          <div class="loading">
-            <div class="loading-spinner"></div>
-            <span>Atualizando dados...</span>
+      return `
+        <header>
+          <h1>🎯 SOL Sniper PRO <span class="timeframe-badge">GitHub Pages</span></h1>
+          <div class="subtitle">
+            Sistema avançado com análise invertida: Contexto 5m + Timing 1h para entradas rápidas com confirmação de longo prazo
           </div>
-        `;
+          
+          <div class="status-bar">
+            <span class="status-indicator"></span>
+            <span><strong>Conectado via Proxy CORS</strong> • Atualizando a cada 60 segundos</span>
+          </div>
+          
+          <div class="strategy-info">
+            <h3><i class="fas fa-brain"></i> Estratégia de Trading com Timeframes Invertidos</h3>
+            <p>Esta configuração inverte a lógica tradicional de análise técnica para traders de curto prazo:</p>
+            <ul>
+              <li><strong>⏱️ Contexto 5m:</strong> Análise de curto prazo para identificar tendências imediatas (RSI, Suporte/Resistência, Volume)</li>
+              <li><strong>⏰ Timing 1h:</strong> Confirmação de timing de entrada/saída usando MACD e análise de longo prazo</li>
+              <li><strong>🎯 Sinal de COMPRA:</strong> Tendência de alta no timeframe 5m + Confirmação MACD 1h (crossover de alta)</li>
+              <li><strong>🎯 Sinal de VENDA:</strong> Tendência de baixa no timeframe 5m + Confirmação MACD 1h (crossover de baixa)</li>
+              <li><strong>🔄 Benefício:</strong> Ideal para day traders que buscam entradas rápidas com segurança de confirmação de longo prazo</li>
+            </ul>
+          </div>
+        </header>
         
-        // Buscar dados 5m (contexto de curto prazo)
-        const candles5m = await fetchCandles(CONFIG.SYMBOL, CONFIG.INTERVAL_5M, CONFIG.CANDLES_LIMIT_5M);
-        if (!candles5m || candles5m.length === 0) {
-          throw new Error('Nenhum dado 5m recebido da Binance');
+        <div class="config-panel">
+          <div class="config-title">
+            <i class="fas fa-cog"></i> Configuração do Sistema
+          </div>
+          <div class="config-grid">
+            <div class="config-item">
+              <span class="config-label">Par Monitorado</span>
+              <div class="config-value">SOL/USDT</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Contexto (TF)</span>
+              <div class="config-value">5m</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Timing (TF)</span>
+              <div class="config-value">1h <span class="timeframe-badge">MACD</span></div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Período RSI</span>
+              <div class="config-value">14 velas</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">MACD Parameters</span>
+              <div class="config-value">(12, 26, 9)</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Tolerância S/R</span>
+              <div class="config-value">1,2%</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Threshold Volume</span>
+              <div class="config-value">1,5x média</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Última Atualização</span>
+              <div class="config-value">${timestampBR}</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Proxy CORS</span>
+              <div class="config-value">api.allorigins.win</div>
+            </div>
+            <div class="config-item">
+              <span class="config-label">Ambiente</span>
+              <div class="config-value">GitHub Pages</div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-coins"></i> Preço Atual
+              </div>
+              <div>
+                <span class="metric-badge badge-rsi">SOL/USDT</span>
+              </div>
+            </div>
+            <div class="price-display">
+              R$${formatBR(price, 2)} <small>USDT</small>
+            </div>
+            <div class="alert-container ${signals.signalType}">
+              ${signals.message || 'Sem sinal definido no momento'}
+              ${signals.macdConfirmation ? '<br><small style="opacity:0.8">✅ Confirmação MACD 1h</small>' : ''}
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-chart-line"></i> Indicadores 5m
+              </div>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-item">
+                <span class="metric-label">RSI (14)</span>
+                <span class="metric-value" style="color: ${rsiColor};">${formatBR(rsi, 2)}</span>
+                <span class="metric-badge badge-rsi" style="color: ${rsiColor};">${rsiStatus}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Volume</span>
+                <span class="metric-value" style="color: ${volColor};">${formatBR(volume.ratio, 2)}x</span>
+                <span class="metric-badge badge-volume" style="color: ${volColor};">${volStatus}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">5m Alta</span>
+                <span class="metric-value">R$${formatBR(sr.resistance, 2)}</span>
+                <span class="metric-badge badge-resistance">Resistência</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">5m Baixa</span>
+                <span class="metric-value">R$${formatBR(sr.support, 2)}</span>
+                <span class="metric-badge badge-support">Suporte</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-bullseye"></i> Análise 5m
+              </div>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-item">
+                <span class="metric-label">Dist. Suporte</span>
+                <span class="metric-value" style="color: ${distSupColor};">${formatBR(sr.distanceToSupport, 2)}%</span>
+                <span class="metric-badge badge-support" style="color: ${distSupColor};">${sr.distanceToSupport <= 1.2 ? 'PRÓXIMO' : 'DISTANTE'}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Dist. Resistência</span>
+                <span class="metric-value" style="color: ${distResColor};">${formatBR(sr.distanceToResistance, 2)}%</span>
+                <span class="metric-badge badge-resistance" style="color: ${distResColor};">${sr.distanceToResistance <= 1.2 ? 'PRÓXIMO' : 'DISTANTE'}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Sinal 5m</span>
+                <span class="metric-value">${signals.signal}</span>
+                <span class="metric-badge badge-rsi">${signals.strength}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Força Sinal</span>
+                <span class="metric-value">${signals.strengthLevel}/4</span>
+                <span class="metric-badge badge-rsi">${signals.strength}</span>
+              </div>
+            </div>
+          </div>
+          
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-stopwatch"></i> Timing 1h (MACD)
+              </div>
+            </div>
+            <div class="metric-grid">
+              <div class="metric-item">
+                <span class="metric-label">MACD</span>
+                <span class="metric-value" style="color: ${macdAnalysis.signal === 'bullish' ? '#28a745' : (macdAnalysis.signal === 'bearish' ? '#dc3545' : '#8b949e')}">${formatBR(macdAnalysis.macdValue, 4)}</span>
+                <span class="metric-badge badge-macd" style="color: ${macdAnalysis.signal === 'bullish' ? '#28a745' : (macdAnalysis.signal === 'bearish' ? '#dc3545' : '#8b949e')}">${macdAnalysis.signal.toUpperCase()}</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Signal Line</span>
+                <span class="metric-value">${formatBR(macdAnalysis.signalLineValue, 4)}</span>
+                <span class="metric-badge badge-macd">9-período</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Histograma</span>
+                <span class="metric-value" style="color: ${macdAnalysis.histogramValue >= 0 ? '#28a745' : '#dc3545'}">${macdAnalysis.histogramValue >= 0 ? '+' : ''}${formatBR(macdAnalysis.histogramValue, 6)}</span>
+                <span class="metric-badge badge-macd" style="color: ${macdAnalysis.histogramValue >= 0 ? '#28a745' : '#dc3545'}">${macdAnalysis.histogramValue >= 0 ? 'ACIMA' : 'ABAIXO'} ZERO</span>
+              </div>
+              <div class="metric-item">
+                <span class="metric-label">Crossover</span>
+                <span class="metric-value">${macdAnalysis.crossover === 'bullish' ? 'ALTA' : (macdAnalysis.crossover === 'bearish' ? 'BAIXA' : '---')}</span>
+                <span class="metric-badge badge-macd">${macdAnalysis.crossover === 'bullish' ? 'CONFIRMADO' : (macdAnalysis.crossover === 'bearish' ? 'CONFIRMADO' : 'AGUARDANDO')}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="footer">
+          <p><i class="fas fa-robot"></i> SOL Sniper PRO v5.0 • GitHub Pages Edition</p>
+          <p>Fonte: Binance API via Proxy CORS • Atualização automática a cada 60s</p>
+          <div class="update-time" id="countdownTimer">Próxima atualização em: 60s</div>
+          ${db.lastSuccessfulData ? `<div class="last-update">Última atualização: ${new Date(db.lastSuccessfulData.timestamp).toLocaleString('pt-BR', { timeZone: 'America/Sao_Paulo', hour12: false })}</div>` : ''}
+          <p style="margin-top: 12px; font-size: 0.9rem; opacity: 0.7;">
+            <i class="fas fa-exclamation-triangle"></i> Este sistema é para fins educacionais. Opere com responsabilidade e sempre use stop loss.
+          </p>
+          <p style="margin-top: 8px; font-size: 0.85rem; opacity: 0.6;">
+            ⚠️ Proxy público gratuito - pode ter limitações de uso. Para produção, configure seu próprio proxy.
+          </p>
+        </div>
+      `;
+    }
+
+    // Atualizar contador regressivo
+    function startCountdown() {
+      let seconds = 60;
+      const timerElement = document.getElementById('countdownTimer');
+      
+      if (!timerElement) return;
+      
+      const interval = setInterval(() => {
+        seconds--;
+        timerElement.textContent = `Próxima atualização em: ${seconds}s`;
+        
+        if (seconds <= 0) {
+          seconds = 60;
+          runAnalysis();
         }
+      }, 1000);
+      
+      return interval;
+    }
+
+    // Função principal - FUNCIONA NO GITHUB PAGES!
+    async function runAnalysis() {
+      console.log('\n--- SOL Sniper PRO (GitHub Pages): ' + new Date().toLocaleTimeString('pt-BR', { timeZone: 'America/Sao_Paulo' }) + ' ---');
+      
+      try {
+        loadDb();
         
-        // Buscar dados 1h para MACD (timing de longo prazo)
-        const candles1h = await fetchCandles(CONFIG.SYMBOL, CONFIG.INTERVAL_1H, CONFIG.CANDLES_LIMIT_1H);
-        if (!candles1h || candles1h.length === 0) {
-          throw new Error('Nenhum dado 1h recebido da Binance');
-        }
+        // URLs da Binance SEM espaços extras
+        const url5m = `https://api.binance.com/api/v3/klines?symbol=${CONFIG.SYMBOL}&interval=${CONFIG.INTERVAL_5M}&limit=${CONFIG.CANDLES_LIMIT_5M}`;
+        const url1h = `https://api.binance.com/api/v3/klines?symbol=${CONFIG.SYMBOL}&interval=${CONFIG.INTERVAL_1H}&limit=${CONFIG.CANDLES_LIMIT_1H}`;
         
-        // Processar dados 5m (contexto)
-        const lastCandle5m = candles5m[candles5m.length - 1];
-        const currentPrice = lastCandle5m.close;
-        const rsi = calculateRSI(candles5m, CONFIG.RSI_PERIOD);
-        const sr = calculateSupportResistance(candles5m, 12); // 12 velas de 5m = 1h
-        const volume = analyzeVolume(candles5m, 12);
+        // Usar proxy CORS para GitHub Pages
+        const proxyUrl5m = CONFIG.CORS_PROXY + encodeURIComponent(url5m);
+        const proxyUrl1h = CONFIG.CORS_PROXY + encodeURIComponent(url1h);
         
-        // Processar MACD 1h (timing)
+        console.log('📡 Buscando dados via proxy CORS...');
+        
+        // Buscar dados 5m
+        const response5m = await fetch(proxyUrl5m);
+        if (!response5m.ok) throw new Error(`Erro API 5m: ${response5m.status}`);
+        const data5m = await response5m.json();
+        
+        const candles5m = data5m.map(d => ({
+          time: d[0], 
+          close: parseFloat(d[4]), 
+          high: parseFloat(d[2]), 
+          low: parseFloat(d[3]),
+          volume: parseFloat(d[5])
+        }));
+
+        // Buscar dados 1h
+        const response1h = await fetch(proxyUrl1h);
+        if (!response1h.ok) throw new Error(`Erro API 1h: ${response1h.status}`);
+        const data1h = await response1h.json();
+        
+        const candles1h = data1h.map(d => ({
+          time: d[0], 
+          close: parseFloat(d[4]), 
+          high: parseFloat(d[2]), 
+          low: parseFloat(d[3]),
+          volume: parseFloat(d[5])
+        }));
+
+        const currentPrice = candles5m[candles5m.length - 1].close;
+        const rsiValue = calculateRSI(candles5m, CONFIG.RSI_PERIOD);
+        const sr = calculateSupportResistance(candles5m, 12);
+        const volumeInfo = analyzeVolume(candles5m, 12);
+        
         const macdData = calculateMACD(candles1h, CONFIG.MACD_FAST, CONFIG.MACD_SLOW, CONFIG.MACD_SIGNAL);
         const macdAnalysis = analyzeMACD(macdData);
-        
-        // Verificar sinais com timeframes invertidos
-        const signals = checkSignals(currentPrice, rsi, sr, volume, macdAnalysis);
-        
-        // Salvar preço no banco de dados local
-        savePrice(currentPrice);
-        
-        // Salvar sinal se for forte e novo
-        const lastStrongSignal = signalHistory.find(s => 
-          s.signal.includes('COMPRA') || s.signal.includes('VENDA')
-        );
-        
-        const isStrongSignal = signals.strength === 'ALTA' && signals.macdConfirmation;
-        const isDifferentFromLast = !lastStrongSignal || 
-          (lastStrongSignal.signal.includes('COMPRA') && signals.signal.includes('VENDA')) ||
-          (lastStrongSignal.signal.includes('VENDA') && signals.signal.includes('COMPRA'));
-        
-        if (isStrongSignal && isDifferentFromLast) {
-          saveSignal({
-            price: currentPrice,
-            signal: signals.signal,
-            strength: signals.strength,
-            rsi: rsi,
-            macd: macdAnalysis.macdValue,
-            signalType: signals.signalType
-          });
+
+        const signals = checkSignals(currentPrice, rsiValue, sr, volumeInfo, macdAnalysis);
+
+        console.log(`✅ Dados recebidos com sucesso!`);
+        console.log(`💵 Preço: R$${formatBR(currentPrice, 2)} | RSI: ${formatBR(rsiValue, 2)} | Vol: ${formatBR(volumeInfo.ratio, 2)}x`);
+
+        // Salvar no banco de dados
+        db.prices.push({ timestamp: Date.now(), price: currentPrice });
+        if (db.prices.length > 1000) db.prices = db.prices.slice(-1000);
+
+        // Salvar sinal forte
+        if (signals.strength === 'ALTA' && signals.macdConfirmation) {
+          const lastSignal = db.signals[db.signals.length - 1];
+          const isDifferent = !lastSignal || 
+            (lastSignal.signal.includes('COMPRA') && signals.signal.includes('VENDA')) ||
+            (lastSignal.signal.includes('VENDA') && signals.signal.includes('COMPRA'));
           
-          // Mostrar notificação
-          showNotification(signals.message, signals.signalType);
-        }
-        
-        // Atualizar elementos do DOM - Preço e indicadores 5m
-        document.getElementById('current-price').textContent = formatCurrency(currentPrice);
-        document.getElementById('rsi-value').textContent = rsi.toFixed(2);
-        document.getElementById('volume-ratio').textContent = volume.ratio.toFixed(2) + 'x';
-        document.getElementById('high-5m').textContent = '$' + formatCurrency(sr.resistance);
-        document.getElementById('low-5m').textContent = '$' + formatCurrency(sr.support);
-        document.getElementById('dist-support').textContent = sr.distanceToSupport.toFixed(2) + '%';
-        document.getElementById('dist-resistance').textContent = sr.distanceToResistance.toFixed(2) + '%';
-        document.getElementById('current-signal').textContent = signals.signal;
-        document.getElementById('signal-strength').textContent = signals.strength;
-        
-        // Atualizar status RSI
-        const rsiStatusEl = document.getElementById('rsi-status');
-        if (rsi < 30) {
-          rsiStatusEl.textContent = 'Sobrevendido';
-          rsiStatusEl.className = 'metric-badge badge-rsi';
-          rsiStatusEl.style.color = 'var(--rsi-oversold)';
-        } else if (rsi > 70) {
-          rsiStatusEl.textContent = 'Sobrecomprado';
-          rsiStatusEl.className = 'metric-badge badge-rsi';
-          rsiStatusEl.style.color = 'var(--rsi-overbought)';
-        } else {
-          rsiStatusEl.textContent = 'Neutro';
-          rsiStatusEl.className = 'metric-badge badge-rsi';
-          rsiStatusEl.style.color = 'var(--rsi-neutral)';
-        }
-        
-        // Atualizar status Volume
-        const volumeStatusEl = document.getElementById('volume-status');
-        volumeStatusEl.textContent = volume.status;
-        if (volume.ratio >= 1.5) {
-          volumeStatusEl.className = 'metric-badge badge-volume';
-        } else {
-          volumeStatusEl.className = 'metric-badge badge-volume';
-          volumeStatusEl.style.opacity = '0.7';
-        }
-        
-        // Atualizar status Suporte
-        const supportStatusEl = document.getElementById('support-status');
-        supportStatusEl.textContent = sr.distanceToSupport <= CONFIG.TOLERANCE ? 'PRÓXIMO' : 'Distante';
-        supportStatusEl.className = sr.distanceToSupport <= CONFIG.TOLERANCE ? 
-          'metric-badge badge-support' : 'metric-badge badge-support';
-        
-        // Atualizar status Resistência
-        const resistanceStatusEl = document.getElementById('resistance-status');
-        resistanceStatusEl.textContent = sr.distanceToResistance <= CONFIG.TOLERANCE ? 'PRÓXIMO' : 'Distante';
-        resistanceStatusEl.className = sr.distanceToResistance <= CONFIG.TOLERANCE ? 
-          'metric-badge badge-resistance' : 'metric-badge badge-resistance';
-        
-        // Atualizar badge de sinal
-        const signalBadgeEl = document.getElementById('signal-badge');
-        const strengthBadgeEl = document.getElementById('strength-badge');
-        
-        if (signals.signal.includes('COMPRA')) {
-          signalBadgeEl.textContent = signals.signal.includes('FRACA') ? 'LONG FRACO' : 'LONG';
-          signalBadgeEl.className = 'metric-badge badge-support';
-          signalBadgeEl.style.backgroundColor = 'rgba(40, 167, 69, 0.2)';
-          
-          strengthBadgeEl.textContent = signals.strength;
-          strengthBadgeEl.className = 'metric-badge';
-          strengthBadgeEl.style.backgroundColor = signals.strength === 'ALTA' ? 
-            'rgba(40, 167, 69, 0.3)' : (signals.strength === 'MÉDIA' ? 'rgba(255, 193, 7, 0.2)' : 'rgba(108, 117, 125, 0.2)');
-          strengthBadgeEl.style.color = signals.strength === 'ALTA' ? 'var(--success)' : 
-            (signals.strength === 'MÉDIA' ? 'var(--warning)' : 'var(--text-secondary)');
-        } else if (signals.signal.includes('VENDA')) {
-          signalBadgeEl.textContent = signals.signal.includes('FRACA') ? 'SHORT FRACO' : 'SHORT';
-          signalBadgeEl.className = 'metric-badge badge-resistance';
-          signalBadgeEl.style.backgroundColor = 'rgba(220, 53, 69, 0.2)';
-          
-          strengthBadgeEl.textContent = signals.strength;
-          strengthBadgeEl.className = 'metric-badge';
-          strengthBadgeEl.style.backgroundColor = signals.strength === 'ALTA' ? 
-            'rgba(220, 53, 69, 0.3)' : (signals.strength === 'MÉDIA' ? 'rgba(255, 193, 7, 0.2)' : 'rgba(108, 117, 125, 0.2)');
-          strengthBadgeEl.style.color = signals.strength === 'ALTA' ? 'var(--danger)' : 
-            (signals.strength === 'MÉDIA' ? 'var(--warning)' : 'var(--text-secondary)');
-        } else {
-          signalBadgeEl.textContent = 'ESPERAR';
-          signalBadgeEl.className = 'metric-badge';
-          signalBadgeEl.style.backgroundColor = 'rgba(108, 117, 125, 0.2)';
-          signalBadgeEl.style.color = 'var(--text-secondary)';
-          
-          strengthBadgeEl.textContent = '-';
-          strengthBadgeEl.className = 'metric-badge';
-          strengthBadgeEl.style.backgroundColor = 'rgba(108, 117, 125, 0.2)';
-        }
-        
-        // Atualizar indicadores MACD 1h
-        document.getElementById('macd-value').textContent = macdAnalysis.macdValue.toFixed(4);
-        document.getElementById('signal-line-value').textContent = macdAnalysis.signalLineValue.toFixed(4);
-        document.getElementById('histogram-value').textContent = formatNumberWithSign(macdAnalysis.histogramValue, 6);
-        
-        // Atualizar status MACD
-        const macdStatusEl = document.getElementById('macd-status');
-        const histogramStatusEl = document.getElementById('histogram-status');
-        const crossoverTypeEl = document.getElementById('crossover-type');
-        const crossoverStatusEl = document.getElementById('crossover-status');
-        
-        // Status do MACD
-        if (macdAnalysis.signal === 'bullish') {
-          macdStatusEl.textContent = 'Bullish';
-          macdStatusEl.className = 'metric-badge badge-macd bullish';
-        } else if (macdAnalysis.signal === 'bearish') {
-          macdStatusEl.textContent = 'Bearish';
-          macdStatusEl.className = 'metric-badge badge-macd bearish';
-        } else {
-          macdStatusEl.textContent = 'Neutral';
-          macdStatusEl.className = 'metric-badge badge-macd';
-        }
-        
-        // Status do Histograma
-        if (macdAnalysis.histogramValue > 0) {
-          histogramStatusEl.textContent = 'Acima Zero';
-          histogramStatusEl.className = 'metric-badge badge-macd bullish';
-        } else if (macdAnalysis.histogramValue < 0) {
-          histogramStatusEl.textContent = 'Abaixo Zero';
-          histogramStatusEl.className = 'metric-badge badge-macd bearish';
-        } else {
-          histogramStatusEl.textContent = 'Zero';
-          histogramStatusEl.className = 'metric-badge badge-macd';
-        }
-        
-        // Status do Crossover
-        if (macdAnalysis.crossover === 'bullish') {
-          crossoverTypeEl.textContent = 'ALTA';
-          crossoverStatusEl.textContent = 'CONFIRMADO';
-          crossoverStatusEl.className = 'metric-badge badge-macd bullish';
-        } else if (macdAnalysis.crossover === 'bearish') {
-          crossoverTypeEl.textContent = 'BAIXA';
-          crossoverStatusEl.textContent = 'CONFIRMADO';
-          crossoverStatusEl.className = 'metric-badge badge-macd bearish';
-        } else {
-          crossoverTypeEl.textContent = '---';
-          crossoverStatusEl.textContent = 'Aguardando';
-          crossoverStatusEl.className = 'metric-badge badge-macd';
-        }
-        
-        // Atualizar alerta principal
-        const alertBox = document.getElementById('alert-box');
-        
-        if (signals.signal.includes('COMPRA')) {
-          alertBox.className = 'alert-container buy';
-          alertBox.innerHTML = `
-            <i class="fas fa-arrow-up"></i> ${signals.message}
-            ${signals.macdConfirmation ? '<br><small style="opacity:0.8">✅ Confirmação MACD 1h</small>' : ''}
-          `;
-        } else if (signals.signal.includes('VENDA')) {
-          alertBox.className = 'alert-container sell';
-          alertBox.innerHTML = `
-            <i class="fas fa-arrow-down"></i> ${signals.message}
-            ${signals.macdConfirmation ? '<br><small style="opacity:0.8">✅ Confirmação MACD 1h</small>' : ''}
-          `;
-        } else {
-          alertBox.className = 'alert-container none';
-          alertBox.textContent = 'Nenhum sinal forte no momento. Aguardando confirmação de ambos timeframes.';
-        }
-        
-        // Atualizar gráficos com base na aba ativa
-        if (currentTab === '5m') {
-          createCandlestickChart('main-chart', candles5m.slice(-50), 'SOL/USDT 5m');
-        } else if (currentTab === '1h') {
-          createCandlestickChart('main-chart', candles1h.slice(-20), 'SOL/USDT 1h');
-        } else if (currentTab === 'macd') {
-          createCandlestickChart('main-chart', candles1h.slice(-20), 'MACD 1h', macdData);
-        }
-        
-        // Atualizar horários
-        lastUpdate = new Date();
-        document.getElementById('last-update').textContent = formatTime(lastUpdate);
-        
-        // Resetar contador
-        if (countdownInterval) clearInterval(countdownInterval);
-        let secondsLeft = Math.floor(CONFIG.UPDATE_INTERVAL / 1000);
-        document.getElementById('next-update').textContent = `Próxima atualização em: ${secondsLeft}s`;
-        
-        countdownInterval = setInterval(() => {
-          secondsLeft--;
-          document.getElementById('next-update').textContent = `Próxima atualização em: ${secondsLeft}s`;
-          if (secondsLeft <= 0) secondsLeft = Math.floor(CONFIG.UPDATE_INTERVAL / 1000);
-        }, 1000);
-        
-        console.log('Dashboard atualizado com timeframes invertidos:', formatTime(lastUpdate));
-        console.log('MACD 1h:', macdAnalysis.signal, '| Crossover:', macdAnalysis.crossover);
-        
-      } catch (error) {
-        console.error('Erro ao atualizar dashboard:', error);
-        showError(`Erro ao atualizar dados: ${error.message || 'Verifique sua conexão com a internet'}`);
-        
-        // Manter último preço se houver
-        if (document.getElementById('current-price').textContent.includes('Carregando')) {
-          document.getElementById('current-price').textContent = '$ --.--';
-        }
-      }
-    }
-    
-    // Inicializar dashboard
-    async function initDashboard() {
-      console.log('Iniciando SOL Sniper PRO com Timeframes Invertidos...');
-      
-      // Inicializar banco de dados
-      try {
-        await initDatabase();
-        console.log('Banco de dados inicializado com sucesso');
-      } catch (error) {
-        console.error('Erro ao inicializar banco de dados:', error);
-        document.querySelector('.db-status').innerHTML = '<i class="fas fa-exclamation-triangle"></i> Erro DB';
-        document.querySelector('.db-status').style.backgroundColor = 'rgba(220, 53, 69, 0.15)';
-        document.querySelector('.db-status').style.color = 'var(--resistance-color)';
-      }
-      
-      // Configurar tabs dos gráficos
-      document.querySelectorAll('.chart-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-          // Remover classe active de todos os tabs
-          document.querySelectorAll('.chart-tab').forEach(t => t.classList.remove('active'));
-          // Adicionar classe active ao tab clicado
-          tab.classList.add('active');
-          // Atualizar aba ativa
-          currentTab = tab.dataset.tab;
-          // Atualizar gráfico
-          updateDashboard();
-        });
-      });
-      
-      // Primeira atualização imediata
-      await updateDashboard();
-      
-      // Agendar próximas atualizações
-      nextUpdateTimer = setInterval(updateDashboard, CONFIG.UPDATE_INTERVAL);
-      
-      // Adicionar evento de clique para atualização manual
-      document.getElementById('current-price').addEventListener('click', () => {
-        console.log('Atualização manual solicitada');
-        updateDashboard();
-        
-        // Feedback visual
-        const priceEl = document.getElementById('current-price');
-        const originalText = priceEl.textContent;
-        priceEl.textContent = '🔄 Atualizando...';
-        setTimeout(() => {
-          if (priceEl.textContent === '🔄 Atualizando...') {
-            priceEl.textContent = originalText;
+          if (isDifferent) {
+            db.signals.push({
+              timestamp: Date.now(),
+              signal: signals.signal,
+              price: currentPrice,
+              rsi: rsiValue,
+              macd: macdAnalysis.macdValue,
+              strength: signals.strength
+            });
+            
+            if (db.signals.length > 50) db.signals = db.signals.slice(-50);
+            
+            console.log(`🎯 SINAL FORTE: ${signals.signal} | R$${formatBR(currentPrice, 2)}`);
           }
-        }, 2000);
-      });
-      
-      // Mensagem de boas-vindas no console
-      console.log('%c🎯 SOL Sniper PRO com Timeframes Invertidos Iniciado!', 'color: #58a6ff; font-size: 20px; font-weight: bold;');
-      console.log(`%cDados sendo atualizados a cada ${CONFIG.UPDATE_INTERVAL / 1000} segundos`, 'color: #8b949e; font-size: 14px;');
-      console.log('%cFonte: Binance API (https://api.binance.com)', 'color: #28a745; font-size: 14px;');
-      console.log('%cEstratégia: Contexto 5m + Timing 1h (MACD)', 'color: #17a2b8; font-size: 14px;');
-      console.log('%cBanco de Dados: Armazenamento local via IndexedDB', 'color: #ffc107; font-size: 14px;');
+        }
+
+        // Salvar dados bem-sucedidos
+        db.lastSuccessfulData = {
+          price: currentPrice,
+          rsi: rsiValue,
+          sr,
+          volume: volumeInfo,
+          macdAnalysis,
+          signals,
+          timestamp: new Date()
+        };
+        
+        saveDb();
+
+        // Renderizar dashboard
+        renderDashboard({
+          price: currentPrice,
+          rsi: rsiValue,
+          sr,
+          volume: volumeInfo,
+          macdAnalysis,
+          signals,
+          timestamp: new Date()
+        });
+
+        return { price: currentPrice, rsi: rsiValue, signals, timestamp: new Date() };
+
+      } catch (err) {
+        console.error('❌ Erro:', err.message);
+        
+        if (db.lastSuccessfulData) {
+          console.log('💾 Usando dados em cache...');
+          renderDashboard(db.lastSuccessfulData);
+          
+          const footer = document.querySelector('.footer');
+          if (footer) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.color = '#ffc107';
+            errorDiv.style.marginTop = '10px';
+            errorDiv.style.fontSize = '0.85rem';
+            errorDiv.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Erro: ${err.message}. Usando dados em cache.`;
+            footer.appendChild(errorDiv);
+          }
+          
+          return db.lastSuccessfulData;
+        } else {
+          renderError(err);
+          return null;
+        }
+      }
     }
-    
-    // Iniciar quando a página carregar
-    window.addEventListener('DOMContentLoaded', initDashboard);
-    
-    // Tratar visibilidade da página (pausar quando em background)
-    document.addEventListener('visibilitychange', () => {
-      if (document.hidden) {
-        console.log('Página em background - pausando atualizações');
-        if (nextUpdateTimer) clearInterval(nextUpdateTimer);
-        if (countdownInterval) clearInterval(countdownInterval);
+
+    // Renderizar dashboard
+    function renderDashboard(data) {
+      document.getElementById('loadingScreen').style.display = 'none';
+      const dashboardContent = document.getElementById('dashboardContent');
+      dashboardContent.style.display = 'block';
+      dashboardContent.innerHTML = generateDashboard(data);
+      startCountdown();
+    }
+
+    // Renderizar erro
+    function renderError(error) {
+      document.getElementById('loadingScreen').style.display = 'none';
+      
+      const dashboardContent = document.getElementById('dashboardContent');
+      dashboardContent.style.display = 'block';
+      dashboardContent.innerHTML = `
+        <div class="error-container">
+          <div class="error-title">
+            <i class="fas fa-exclamation-triangle"></i> Erro na Conexão
+          </div>
+          <div class="error-message">
+            ${error.message || 'Não foi possível buscar os dados'}
+          </div>
+          <div style="margin: 25px 0; text-align: left; color: #8b949e; line-height: 1.6;">
+            <p><strong>Possíveis causas:</strong></p>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+              <li>Limite de requisições do proxy CORS gratuito</li>
+              <li>API da Binance temporariamente indisponível</li>
+              <li>Sem conexão com a internet</li>
+            </ul>
+            <p style="margin-top: 15px;"><strong>Solução:</strong></p>
+            <ul style="padding-left: 20px; margin-top: 10px;">
+              <li>Aguarde alguns minutos e tente novamente</li>
+              <li>Atualize a página (F5)</li>
+              <li>Verifique sua conexão com a internet</li>
+            </ul>
+          </div>
+          <button class="retry-btn" onclick="runAnalysis()">
+            <i class="fas fa-redo"></i> Tentar Novamente
+          </button>
+          ${db.lastSuccessfulData ? `
+            <div style="margin-top: 20px;">
+              <button class="retry-btn" style="background: #6f42c1;" onclick="renderDashboard(db.lastSuccessfulData)">
+                <i class="fas fa-history"></i> Usar Dados em Cache
+              </button>
+            </div>
+          ` : ''}
+        </div>
+      `;
+    }
+
+    // Iniciar aplicação
+    document.addEventListener('DOMContentLoaded', () => {
+      loadDb();
+      
+      if (db.lastSuccessfulData) {
+        console.log('💾 Carregando dados em cache...');
+        renderDashboard(db.lastSuccessfulData);
+        setTimeout(runAnalysis, 3000);
       } else {
-        console.log('Página em foco - retomando atualizações');
-        if (nextUpdateTimer) clearInterval(nextUpdateTimer);
-        if (countdownInterval) clearInterval(countdownInterval);
-        updateDashboard();
-        nextUpdateTimer = setInterval(updateDashboard, CONFIG.UPDATE_INTERVAL);
+        runAnalysis();
       }
     });
   </script>
 </body>
 </html>
-
